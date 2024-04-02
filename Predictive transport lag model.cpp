@@ -1,7 +1,7 @@
-﻿﻿/*!
-    \ brief Разработка алгоритма прогнозирования качества поступающего сырья для компенсации возмущений установки гидроочистки бензина каталитического крекинга.
+﻿/*
+    \ brief Метод характеристик (Разработка алгоритма прогнозирования качества поступающего сырья для компенсации возмущений установки гидроочистки бензина каталитического крекинга)
     \ author Bilyalov Eldar
-    \ version 1.0 (Подготовка. Этап 1)
+    \ version 1.0 (Модель с переменным шагом по времени)
     \ date 02.04.24
 
 */
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     using namespace std;
 
     setlocale(LC_ALL, "rus");
-    /// @param Объявление структуры с именем Pipeline_parameters для переменной pipeline_characteristics
+    /// @param Объявление структуры с именем Pipeline_parameters для переменной pipeline_characteristics 
     Pipeline_parameters  pipeline_characteristics;
     /// @param - количество точек расчетной сетки;
     int n = 10;
