@@ -18,7 +18,7 @@
 #include <fstream>
 #include <locale>
 #include "File.h"
-
+#include <ctime>
 
 class MassFlow : protected File {
     /// @param Массовый расход, [кг/с]
@@ -52,11 +52,67 @@ public:
     }
 };
 
-class Sulfar : public File {
-
+class Sulfar : protected File {
+    double sulfar;
+public:
+    Sulfar(std::string path, int lineNumber) : File(path, lineNumber) {};
+    double getSulfar() {
+        sulfar = std::stod(getValue());
+        return sulfar;
+    };
 };
 
+class DiscreteDataTime : protected File {
+    std::string dataTime;
+    std::string time;
+    std::string data;
+    std::pair<std::string, std::string> splitDataTime;
 
+    /// @brief Метод разделения строки "даты и время"
+    std::pair<std::string, std::string> splitString(const std::string& dataTime) {
+        bool foundSpace = false; // флаг, указывающий, найден ли пробел
+
+        for (char ch : dataTime) {
+            if (ch == ' ') {
+                foundSpace = true;
+            }
+            else if (!foundSpace) {
+                data += ch;
+            }
+            else {
+                time += ch;
+            }
+        }
+        return std::make_pair(data, time);
+    }
+
+public:
+    DiscreteDataTime(std::string path, int lineNumber) : File(path, lineNumber) {};
+    /// @brief Метод возврата даты и времени как строки
+    std::string getStrDataTime() {
+        dataTime = getValue();
+    }
+
+    /// @brief Метод возврата даты как строки
+    std::string getStrData() {
+        splitDataTime = splitString(dataTime);
+        return splitDataTime.first;
+    }
+    
+    /// @brief Метод возврата времени как строки
+    std::string getStrTime() {
+        splitDataTime = splitString(dataTime);
+        return splitDataTime.second;
+    }
+
+    /// @brief Метод возврата времени как числа
+    std::string getNumTime() {
+    
+    }
+    
+
+    
+};
 
 
 
@@ -71,13 +127,16 @@ int main(int argc, char** argv)
 
 
     MassFlow  massFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", 3); // Имя файла и номер строки, которую нужно считать
-    std::cout << "Считанное значение: " << massFlow.getMassFlow() << std::endl;
+    std::cout << "Считанное значение massFlow: " << massFlow.getMassFlow() << std::endl;
     
     Density  density("D:/source/diplop AT-20-01/data txt/density.txt", 3); // Имя файла и номер строки, которую нужно считать
-    std::cout << "Считанное значение: " << density.getDensity() << std::endl;
+    std::cout << "Считанное значение density: " << density.getDensity() << std::endl;
 
     VolumeFlow volumeFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", "D:/source/diplop AT-20-01/data txt/density.txt", 3);  // Имя файла и номер строки, которую нужно считать
-    std::cout << "Считанное значение: " << volumeFlow.getVolumeFlow() << std::endl;
+    std::cout << "Считанное значение volumeFlow: " << volumeFlow.getVolumeFlow() << std::endl;
+
+    Sulfar sulfar("D:/source/diplop AT-20-01/data txt/sulfar.txt", 3); // Имя файла и номер строки, которую нужно считать
+    std::cout << "Считанное значение sulfar: " << volumeFlow.getVolumeFlow() << std::endl;
 
     /// @param Объявление структуры с именем Pipeline_parameters для переменной pipeline_characteristics 
     Pipeline_parameters  pipeline_characteristics;
