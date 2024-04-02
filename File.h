@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <locale>
-#include <Windows.h>
+
 
 class File {
 private:
