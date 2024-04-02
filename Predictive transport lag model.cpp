@@ -20,12 +20,36 @@
 #include "File.h"
 
 
-class MassFlow : public File {
-
+class MassFlow : protected File {
+    /// @param Массовый расход, [кг/с]
+    double massFlow;
+public:
+    MassFlow(std::string path, int lineNumber) : File(path, lineNumber) {};
+    double getMassFlow() {
+        /// Перевожу из [т/час] в [кг/с]
+        massFlow = (std::stod(getValue())) * 1000 / 3600; 
+        return massFlow;
+    }
 };
 
-class VolumeFlow : public MassFlow {
+class Density : protected File {
+    double density;
+public:
+    Density(std::string path, int lineNumber) : File(path, lineNumber) {};
+    double getDensity() {
+        density = std::stod(getValue());
+        return density;
+    }
+};
 
+class VolumeFlow : protected MassFlow, protected Density{
+    double volumeFlow;
+public:
+    VolumeFlow(std::string pathMassFlow, std::string pathDensity, int lineNumber) : MassFlow(pathMassFlow, lineNumber), Density(pathDensity, lineNumber) {};
+    double getVolumeFlow() {
+        volumeFlow = getMassFlow() / getDensity();
+        return volumeFlow;
+    }
 };
 
 class Sulfar : public File {
@@ -45,8 +69,15 @@ int main(int argc, char** argv)
     using namespace std;
     setlocale(LC_ALL, "rus");
 
-    File file("D:/source/diplop AT-20-01/data txt/mass flow.txt", 3); // Имя файла и номер строки, которую нужно считать
-    std::cout << "Считанное значение: " << file.getValue() << std::endl;
+
+    MassFlow  massFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", 3); // Имя файла и номер строки, которую нужно считать
+    std::cout << "Считанное значение: " << massFlow.getMassFlow() << std::endl;
+    
+    Density  density("D:/source/diplop AT-20-01/data txt/density.txt", 3); // Имя файла и номер строки, которую нужно считать
+    std::cout << "Считанное значение: " << density.getDensity() << std::endl;
+
+    VolumeFlow volumeFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", "D:/source/diplop AT-20-01/data txt/density.txt", 3);  // Имя файла и номер строки, которую нужно считать
+    std::cout << "Считанное значение: " << volumeFlow.getVolumeFlow() << std::endl;
 
     /// @param Объявление структуры с именем Pipeline_parameters для переменной pipeline_characteristics 
     Pipeline_parameters  pipeline_characteristics;

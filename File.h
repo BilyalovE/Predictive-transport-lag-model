@@ -12,13 +12,14 @@ private:
     std::string currentValue;
 
     std::ifstream fin;
+    void readValue();
+
+protected:
+    std::string getValue();
+
 public:
 
     File(std::string path, int lineNumber);
-
-    void readValue();
-
-    std::string getValue();
 
     ~File();
 };
