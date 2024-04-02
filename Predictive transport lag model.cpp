@@ -19,6 +19,8 @@
 #include <locale>
 #include "File.h"
 #include <ctime>
+#include <sstream>
+#include <Windows.h>
 
 class MassFlow : protected File {
     /// @param Массовый расход, [кг/с]
@@ -63,55 +65,76 @@ public:
 };
 
 class DiscreteDataTime : protected File {
-    std::string dataTime;
-    std::string time;
-    std::string data;
+    /// @param Дата и время как строка
+    std::string strDataTime;
+    /// @param Время как строка
+    std::string strTime;
+    /// @param Дата как строка
+    std::string strData;
+    /// @param Время как число секунд int
+    int totalSeconds;
+    /// @param структура данных для отдельного хранения даты и времени
     std::pair<std::string, std::string> splitDataTime;
 
-    /// @brief Метод разделения строки "даты и время"
-    std::pair<std::string, std::string> splitString(const std::string& dataTime) {
+    std::pair<std::string, std::string> splitString(const std::string& strDataTime) {
+        std::string strData;
+        std::string strTime;
         bool foundSpace = false; // флаг, указывающий, найден ли пробел
 
-        for (char ch : dataTime) {
+        for (char ch : strDataTime) {
             if (ch == ' ') {
                 foundSpace = true;
             }
             else if (!foundSpace) {
-                data += ch;
+                strData += ch;
             }
             else {
-                time += ch;
+                strTime += ch;
             }
         }
-        return std::make_pair(data, time);
+        return std::make_pair(strData, strTime);
+    }
+
+    /// @brief Метод для преобразования времени формата "чч:мм:сс" в количество секунд
+    int timeStringToSeconds(const std::string& strTime) {
+        int hours, minutes, seconds;
+        char delimiter;
+
+        std::istringstream iss(strTime);
+        iss >> hours >> delimiter >> minutes >> delimiter >> seconds;
+
+        // Вычисляем общее количество секунд
+        return hours * 3600 + minutes * 60 + seconds;
     }
 
 public:
     DiscreteDataTime(std::string path, int lineNumber) : File(path, lineNumber) {};
     /// @brief Метод возврата даты и времени как строки
     std::string getStrDataTime() {
-        dataTime = getValue();
+        strDataTime = getValue();
+        return strDataTime;
     }
 
     /// @brief Метод возврата даты как строки
     std::string getStrData() {
-        splitDataTime = splitString(dataTime);
-        return splitDataTime.first;
+        splitDataTime = splitString(strDataTime);
+        strData = splitDataTime.first;
+        return strData;
     }
     
     /// @brief Метод возврата времени как строки
     std::string getStrTime() {
-        splitDataTime = splitString(dataTime);
-        return splitDataTime.second;
+        splitDataTime = splitString(strDataTime);
+        strTime = splitDataTime.second;
+        return strTime;
     }
 
-    /// @brief Метод возврата времени как числа
-    std::string getNumTime() {
-    
+    /// @brief Метод возврата времени как числа секунд формата int
+    int getIntSecTime() {
+        strTime = getStrTime();
+        totalSeconds = timeStringToSeconds(strTime);
+        return totalSeconds;
     }
-    
-
-    
 };
 
 
@@ -136,8 +159,14 @@ int main(int argc, char** argv)
     std::cout << "Считанное значение volumeFlow: " << volumeFlow.getVolumeFlow() << std::endl;
 
     Sulfar sulfar("D:/source/diplop AT-20-01/data txt/sulfar.txt", 3); // Имя файла и номер строки, которую нужно считать
-    std::cout << "Считанное значение sulfar: " << volumeFlow.getVolumeFlow() << std::endl;
-
+    std::cout << "Считанное значение sulfar: " << sulfar.getSulfar() << std::endl;
+    
+    DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", 10); // Имя файла и номер строки, которую нужно считать
+    std::cout << "Считанное значение даты и времени как строки: " << discreteDataTime.getStrDataTime() << std::endl;
+    std::cout << "Считанное значение даты как строки: " << discreteDataTime.getStrData() << std::endl;
+    std::cout << "Считанное значение времени как строки: " << discreteDataTime.getStrTime() << std::endl;
+    std::cout << "Считанное значение времени как числа секунд формата int: " <<discreteDataTime.getIntSecTime() << std::endl;
+    
     /// @param Объявление структуры с именем Pipeline_parameters для переменной pipeline_characteristics 
     Pipeline_parameters  pipeline_characteristics;
     /// @param - количество точек расчетной сетки;

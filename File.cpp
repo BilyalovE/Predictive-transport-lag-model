@@ -8,6 +8,9 @@ File::File(std::string path, int lineNumber) {
     };
 
 void File::readValue() {
+        // Устанавливаем русскую локаль
+        // Устанавливаем русскую локаль
+        std::locale::global(std::locale("ru_RU.UTF-8"));
         fin.open(path);
         if (!fin.is_open()) {
             std::cout << "Ошибка открытия файла " << path << std::endl;
