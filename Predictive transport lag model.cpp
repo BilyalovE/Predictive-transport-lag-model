@@ -14,16 +14,40 @@
 #include <pde_solvers/pde_solvers.h>
 #include "Block_1_transport_equation.h"
 #include "Struct_pipe.h"
+#include <string>
+#include <fstream>
+#include <locale>
+#include "File.h"
+
+
+class MassFlow : public File {
+
+};
+
+class VolumeFlow : public MassFlow {
+
+};
+
+class Sulfar : public File {
+
+};
+
+
+
 
 
 
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
+    
     // Используем пространство имен std
     using namespace std;
-
     setlocale(LC_ALL, "rus");
+
+    File file("D:/source/diplop AT-20-01/data txt/mass flow.txt", 3); // Имя файла и номер строки, которую нужно считать
+    std::cout << "Считанное значение: " << file.getValue() << std::endl;
+
     /// @param Объявление структуры с именем Pipeline_parameters для переменной pipeline_characteristics 
     Pipeline_parameters  pipeline_characteristics;
     /// @param - количество точек расчетной сетки;
