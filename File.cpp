@@ -5,15 +5,16 @@
 File::File(std::string path, int lineNumber) {
         this->path = path;
         this->lineNumber = lineNumber;
+       
     };
 
 void File::readValue() {
-        // Устанавливаем русскую локаль
         // Устанавливаем русскую локаль
         std::locale::global(std::locale("ru_RU.UTF-8"));
         fin.open(path);
         if (!fin.is_open()) {
             std::cout << "Ошибка открытия файла " << path << std::endl;
+            flag = false;
         }
         else {
             // Перемещаем указатель на нужную строку
@@ -21,6 +22,7 @@ void File::readValue() {
                 std::string line;
                 if (!std::getline(fin, line)) {
                     std::cerr << "Недостаточно строк в файле!" << std::endl;
+                    flag = false;
                     return;
                 }
             }
@@ -28,6 +30,7 @@ void File::readValue() {
             std::string line;
             if (!std::getline(fin, line)) {
                 std::cerr << "Ошибка при чтении строки " << lineNumber << std::endl;
+                flag = false;
                 return;
             }
             // Присваиваем считанную строку currentValue

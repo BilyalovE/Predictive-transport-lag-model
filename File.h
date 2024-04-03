@@ -13,7 +13,6 @@ private:
     int lineNumber;
     /// @param —читанное из файла значение
     std::string currentValue;
-
     std::ifstream fin;
     void readValue();
 
@@ -21,7 +20,7 @@ protected:
     std::string getValue();
 
 public:
-
+    bool flag = true;
     File(std::string path, int lineNumber);
 
     ~File();
