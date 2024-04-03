@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <fixed/fixed.h>
 #include <pde_solvers/pde_solvers.h>
-#include "Struct_pipe.h"
+#include "Pipe.h"
 
 /// @brief класс Block_1 для решения задач из блока 1 - Модель движения партий
 class Block_1_transport_equation

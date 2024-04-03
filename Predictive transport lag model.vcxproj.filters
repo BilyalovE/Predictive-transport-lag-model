@@ -24,18 +24,24 @@
     <ClCompile Include="File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TransportEquation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block_1_transport_equation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Struct_pipe.h">
+    <ClInclude Include="Pipe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportEquation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
