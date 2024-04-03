@@ -5,7 +5,7 @@ TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristi
     /// @param volumeFlow - объемный расход
     this->volumeFlow = volumeFlow;
     ///@param n - количество точек расчетной сетки;
-    /*this->n = pipeline_characteristics.n;*/
+    this->n = pipeline_characteristics.n;
     /// @param pipeline_characteristics - параметры трубопровода
     this->pipeline_characteristics = pipeline_characteristics;
     
