@@ -18,9 +18,6 @@
     <ClCompile Include="Predictive transport lag model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Block_1_transport_equation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Block_1_transport_equation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Pipe.h">
       <Filter>Header Files</Filter>
     </ClInclude>

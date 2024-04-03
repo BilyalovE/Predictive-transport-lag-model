@@ -1,18 +1,19 @@
 #include "TransportEquation.h"
 
-TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, int j)
+TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow, int j)
 {
-    /// @param n - количество точек расчетной сетки;
-    this->n = pipeline_characteristics.n;
+    /// @param volumeFlow - объемный расход
+    this->volumeFlow = volumeFlow;
+    ///@param n - количество точек расчетной сетки;
+    /*this->n = pipeline_characteristics.n;*/
     /// @param j - счетчик слоя
     this->j = j;
-    /// @param pipeline_characteristics - параметры трубопровода
+    /*/// @param pipeline_characteristics - параметры трубопровода
     this->pipeline_characteristics = pipeline_characteristics;
-    /// @param dx - величина шага между узлами расчетной сетки, м;
-    this->dx = pipeline_characteristics.L / (n - 1);
+    */
 }
 
-void TransportEquation::methodCharacteristic(ring_buffer_t <vector<double>> buffer, double left_condition) 
+void TransportEquation::methodCharacteristic(ring_buffer_t <vector<double>> buffer, double left_condition_sulfar)
 {
     vector<double> current_layer = buffer.current();
     vector<double> previous_layer = buffer.previous();
@@ -23,19 +24,18 @@ void TransportEquation::methodCharacteristic(ring_buffer_t <vector<double>> buff
     }
     // Слой current_layer на следующем шаге должен стать предыдущим. 
     // Для этого сместим индекс текущего слоя в буфере на единицу
-    current_layer[0] = left_condition;
+    current_layer[0] = left_condition_sulfar;
 }
 
 /// @brief get_speed - метод расчета скорости по объемному расходу 
 double TransportEquation::get_speed() {
-  
-   
+    return volumeFlow / pipeline_characteristics.get_inner_square();
 }
 
 /// @brief get_dt - метод получения шага времени dt
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    dt = dx / speed;
+    dt = pipeline_characteristics .get_dx() / speed;
     return dt;
 }

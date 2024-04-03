@@ -129,13 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Block_1_transport_equation.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="Predictive transport lag model.cpp" />
     <ClCompile Include="TransportEquation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Block_1_transport_equation.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Pipe.h" />
