@@ -30,7 +30,7 @@ public:
     // @brief methodCharacteristic - метод характеристик, рассчитывающий слои
     /// @param buffer - буфер, который для расчёта хранит 2 слоя (текущий и прядущий);
     /// @param left_condition - граничное условие для параметра нефти.
-    void methodCharacteristic(ring_buffer_t <vector<double>> buffer, double left_condition_sulfar) ;
+    void methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar) ;
 
     /// @brief get_speed - метод расчета скорости по расходу (расход может быть интерполирован)
     double get_speed();

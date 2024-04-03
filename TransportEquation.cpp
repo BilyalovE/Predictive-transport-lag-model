@@ -11,10 +11,10 @@ TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristi
     
 }
 
-void TransportEquation::methodCharacteristic(ring_buffer_t <vector<double>> buffer, double left_condition_sulfar)
+void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
 {
-    vector<double> current_layer = buffer.current();
-    vector<double> previous_layer = buffer.previous();
+  /*  vector<double> current_layer = buffer.current();
+    vector<double> previous_layer = buffer.previous();*/
     // Получение ссылок на текущий и предыдущий слои буфера
     for (size_t i = 1; i < n; i++)
     {

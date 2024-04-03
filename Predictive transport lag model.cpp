@@ -72,16 +72,16 @@ int main(int argc, char** argv)
     do {
         VolumeFlow volumeFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", "D:/source/diplop AT-20-01/data txt/density.txt", 3);  // Имя файла и номер строки, которую нужно считать 
         TransportEquation transportEquation(pipeline_characteristics, volumeFlow.getVolumeFlow());
-        if (i==0){ transportEquation.methodCharacteristic(buffer, input_condition_sulfar); 
+        if (i==0){ transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), input_condition_sulfar);
         }
         else {
-            transportEquation.methodCharacteristic(buffer, 0);
+            transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), 0);
         }
         sum_dt += transportEquation.get_dt();
         speed = transportEquation.get_speed();
         buffer.advance(1);
         i++;
-    } while (sum_dt * speed <= pipeline_characteristics.L);
+    } while (sum_dt * speed <= pipeline_characteristics.L + pipeline_characteristics.get_dx());
     std::cout << sum_dt << std::endl;
 
     std::cout << speed << std::endl;
