@@ -15,14 +15,15 @@ private:
     std::string currentValue;
     std::ifstream fin;
     void readValue();
+    bool flag = true;
 
 protected:
     std::string getValue();
 
 public:
-    bool flag = true;
+    
     File(std::string path, int lineNumber);
-
+    bool fileStatus();
     ~File();
 };
 
