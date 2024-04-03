@@ -14,8 +14,6 @@ class TransportEquation
     double volumeFlow;
     /// @param n - количество точек расчетной сетки;
     int n;
-    /// @param j - счетчик слоя
-    int j;
     /// @param dt - шаг во времени из условия Куранта;
     double dt;
     /// @param speed - скорость движения нефти
@@ -27,7 +25,7 @@ public:
     /// @param pipeline_characteristics - Структура исходных параметров трубопровода
     /// @param n - количество точек расчетной сетки;
     /// @param j - счетчик текущего слоя
-    TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow, int j);
+    TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow);
 
     // @brief methodCharacteristic - метод характеристик, рассчитывающий слои
     /// @param buffer - буфер, который для расчёта хранит 2 слоя (текущий и прядущий);

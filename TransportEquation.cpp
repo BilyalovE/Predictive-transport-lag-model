@@ -1,16 +1,14 @@
 #include "TransportEquation.h"
 
-TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow, int j)
+TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow)
 {
     /// @param volumeFlow - объемный расход
     this->volumeFlow = volumeFlow;
     ///@param n - количество точек расчетной сетки;
     /*this->n = pipeline_characteristics.n;*/
-    /// @param j - счетчик слоя
-    this->j = j;
-    /*/// @param pipeline_characteristics - параметры трубопровода
+    /// @param pipeline_characteristics - параметры трубопровода
     this->pipeline_characteristics = pipeline_characteristics;
-    */
+    
 }
 
 void TransportEquation::methodCharacteristic(ring_buffer_t <vector<double>> buffer, double left_condition_sulfar)
@@ -36,6 +34,6 @@ double TransportEquation::get_speed() {
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    dt = pipeline_characteristics .get_dx() / speed;
+    dt = pipeline_characteristics.get_dx() / speed;
     return dt;
 }

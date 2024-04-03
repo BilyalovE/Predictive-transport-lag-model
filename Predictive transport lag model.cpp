@@ -66,17 +66,17 @@ int main(int argc, char** argv)
     /// Расчёт произвольного числа слоев (solver_parameters.number_layers) через вызов функции solver в цикле
     /// @param sum_dt -  сумма времени моделирования 
     double sum_dt = 0;
+    double speed = 0;
     /// @param j - счетчик слоев
     int j = 0;
     do {
         VolumeFlow volumeFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", "D:/source/diplop AT-20-01/data txt/density.txt", 3);  // Имя файла и номер строки, которую нужно считать 
-        TransportEquation transportEquation(pipeline_characteristics, volumeFlow.getVolumeFlow(), j);
+        TransportEquation transportEquation(pipeline_characteristics, volumeFlow.getVolumeFlow());
         transportEquation.methodCharacteristic(buffer, input_condition_sulfar);
-
-        //transport_equation.output_data(buffer, sum_dt);
-        buffer.advance(1);
         sum_dt += transportEquation.get_dt();
-        j++;
-    } while (sum_dt <= pipeline_characteristics.T);
+        speed = transportEquation.get_speed();
+        buffer.advance(1);
+    } while (sum_dt * speed <= pipeline_characteristics.L);
+    std::cout << sum_dt;
     return 0;
 }
