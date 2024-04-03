@@ -30,8 +30,7 @@ int main(int argc, char** argv)
 {
 
     
-        // Захват времени начала выполнения
-        auto start = std::chrono::high_resolution_clock::now();
+      
     
         
         //MassFlow  massFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", 3); // Имя файла и номер строки, которую нужно считать
@@ -69,6 +68,8 @@ int main(int argc, char** argv)
         int j = 3;
         File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
         while (file.flag) {
+            //// Захват времени начала выполнения
+            //auto start = std::chrono::high_resolution_clock::now();
             /// @param Измеренное значение содержания серы в бензине каткрекинга в трубе
             double input_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/data txt/sulfar.txt", j); ;
 
@@ -98,16 +99,16 @@ int main(int argc, char** argv)
 
             std::cout << "Скорость " << speed << std::endl;
 
-            // Захват времени окончания выполнения
-            auto end = std::chrono::high_resolution_clock::now();
+            //// Захват времени окончания выполнения
+            //auto end = std::chrono::high_resolution_clock::now();
 
-            // Вычисление продолжительности выполнения в миллисекундах
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            //// Вычисление продолжительности выполнения в миллисекундах
+            //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-            // Вывод продолжительности выполнения
-            std::cout << "Время выполнения: " << duration.count() << " миллисекунд" << std::endl;
+            //// Вывод продолжительности выполнения
+            //std::cout << "Время выполнения: " << duration.count() << " миллисекунд" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1)); // Задержка в 1 секунду
-            std::cout << "Прошла 1 секунда\n\n\n";
+            std::cout << "Прошла 1 секунда\n";
             j++;
             File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
         }
