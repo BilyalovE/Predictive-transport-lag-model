@@ -26,6 +26,69 @@ double call_sulfar(std::string path, int lineNumber) {
     return sulfar.getSulfar();
 }
 
+class Time {
+    int timeDelay;
+
+public:
+    int seconds;
+    int minutes;
+    int hours;
+    Time() : timeDelay(0) {} // Конструктор по умолчанию
+
+    Time(int t) {
+        this->timeDelay = t;
+    };
+
+    void timeConvertation() {
+        hours = int(timeDelay / 3600);
+        minutes = (timeDelay / 3600 - hours) * 60;
+        seconds = timeDelay - minutes;
+    }
+};
+
+std::ostream& operator<<(std::ostream& os, const Time& time) 
+{
+    os << time.hours << ":" << time.minutes << ":" << time.seconds;
+    return os;
+}
+
+
+class OutFile {
+private:
+    /// @param Путь файла
+    std::string path;
+    std::ofstream fout;
+    Time timeDelay;
+public:
+    OutFile(std::string path, const Time& timeDelay) {
+        this->path = path;
+        this->timeDelay = timeDelay;
+    };
+    
+
+    void outPut() 
+    {
+        fout.open(path, std::ofstream::app);
+        if (!fout.is_open())  
+        {
+            std::cout << "Ошибка открытия файла " << path << std::endl;
+        }
+        else 
+        {
+            fout << timeDelay << std::endl;
+        }
+    }
+
+    ~OutFile() {
+        if (fout.is_open())
+            fout.close();
+    };
+};
+
+
+
+
+
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
@@ -95,23 +158,28 @@ int main(int argc, char** argv)
         //// Устанавливаем русскую локаль
         //std::locale::global(std::locale("ru_RU.UTF-8"));
         setlocale(LC_ALL, "rus");
-        std::cout << "Время " << int(sum_dt) << std::endl;
+        Time timeDelay(sum_dt);
+        timeDelay.timeConvertation();
+        OutFile outFile("D:/source/diplop AT-20-01/data txt/transport delay time.txt", timeDelay);
+        outFile.outPut();
+        /*std::cout << "Время " << int(sum_dt) << std::endl;
 
-        std::cout << "Скорость " << speed << std::endl;
+        std::cout << "Скорость " << speed << std::endl;*/
 
-        // Захват времени окончания выполнения
-        auto end = std::chrono::high_resolution_clock::now();
+        //// Захват времени окончания выполнения
+        //auto end = std::chrono::high_resolution_clock::now();
 
-        // Вычисление продолжительности выполнения в миллисекундах
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        //// Вычисление продолжительности выполнения в миллисекундах
+        //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        //// Вывод продолжительности выполнения
+        //std::cout << "Время выполнения: " << duration.count() << " миллисекунд" << std::endl;
 
-        // Вывод продолжительности выполнения
-        std::cout << "Время выполнения: " << duration.count() << " миллисекунд" << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(1)); // Задержка в 1 секунду
         std::cout << "Прошла 1 секунда\n";
         j++;
         File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
+
     }
     return 0;
 }
