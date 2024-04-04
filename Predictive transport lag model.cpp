@@ -28,11 +28,11 @@ double call_sulfar(std::string path, int lineNumber) {
 
 class Time {
     int timeDelay;
-
-public:
     int seconds;
     int minutes;
     int hours;
+public:
+    
     Time() : timeDelay(0) {} // Конструктор по умолчанию
 
     Time(int timeDelay) {
@@ -45,6 +45,7 @@ public:
         minutes = remainingSeconds / 60;
         seconds = remainingSeconds % 60;
     }
+    friend std::ostream& operator<<(std::ostream& os, const Time& time);
 };
 
 std::ostream& operator<<(std::ostream& os, const Time& time) 
@@ -60,10 +61,17 @@ private:
     std::string path;
     std::ofstream fout;
     Time timeDelay;
+    DiscreteDataTime discreteDataTime;
 public:
     OutFile(std::string path, const Time& timeDelay) {
         this->path = path;
         this->timeDelay = timeDelay;
+    };
+
+    OutFile(std::string path, const DiscreteDataTime& discreteDataTime, const Time& timeDelay) {
+        this->path = path;
+        this->timeDelay = timeDelay;
+        this->discreteDataTime = discreteDataTime;
     };
     
 
@@ -161,10 +169,10 @@ int main(int argc, char** argv)
         //std::locale::global(std::locale("ru_RU.UTF-8"));
         setlocale(LC_ALL, "rus");
         Time timeDelay(sum_dt);
-        OutFile outFile("D:/source/diplop AT-20-01/data txt/transport delay time.txt", timeDelay);
-        outFile.outPut();
+        OutFile outFileDelay("D:/source/diplop AT-20-01/data txt/transport delay time.txt", timeDelay);
+        outFileDelay.outPut();
         DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
-
+        OutFile discreteArriveDataTime("D:/source/diplop AT-20-01/data txt/discrete arrive data time.txt", discreteDataTime, timeDelay);
         /*std::cout << "Время " << int(sum_dt) << std::endl;
 
         std::cout << "Скорость " << speed << std::endl;*/

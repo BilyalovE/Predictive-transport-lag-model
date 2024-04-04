@@ -92,6 +92,9 @@ class DiscreteDataTime : protected File {
     }
 
 public:
+    DiscreteDataTime() { 
+        path(0); lineNumber(0) };
+
     DiscreteDataTime(std::string path, int lineNumber) : File(path, lineNumber) {};
     /// @brief Метод возврата даты и времени как строки
     std::string getStrDataTime() {

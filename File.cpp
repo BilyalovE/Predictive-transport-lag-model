@@ -7,6 +7,13 @@ File::File(std::string path, int lineNumber) {
         this->lineNumber = lineNumber;
        
     }
+
+File::File() {
+    path(0);
+    this->lineNumber = lineNumber;
+
+}
+
 bool File::fileStatus()
 {
     readValue();
