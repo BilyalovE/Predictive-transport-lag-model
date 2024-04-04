@@ -35,14 +35,15 @@ public:
     int hours;
     Time() : timeDelay(0) {} // Конструктор по умолчанию
 
-    Time(int t) {
-        this->timeDelay = t;
+    Time(int timeDelay) {
+        this->timeDelay = timeDelay;
     };
 
     void timeConvertation() {
-        hours = int(timeDelay / 3600);
-        minutes = (timeDelay / 3600 - hours) * 60;
-        seconds = timeDelay - minutes;
+        hours = timeDelay / 3600;
+        int remainingSeconds = timeDelay % 3600;
+        minutes = remainingSeconds / 60;
+        seconds = remainingSeconds % 60;
     }
 };
 
@@ -75,6 +76,7 @@ public:
         }
         else 
         {
+            timeDelay.timeConvertation();
             fout << timeDelay << std::endl;
         }
     }
@@ -159,9 +161,10 @@ int main(int argc, char** argv)
         //std::locale::global(std::locale("ru_RU.UTF-8"));
         setlocale(LC_ALL, "rus");
         Time timeDelay(sum_dt);
-        timeDelay.timeConvertation();
         OutFile outFile("D:/source/diplop AT-20-01/data txt/transport delay time.txt", timeDelay);
         outFile.outPut();
+        DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
+
         /*std::cout << "Время " << int(sum_dt) << std::endl;
 
         std::cout << "Скорость " << speed << std::endl;*/
@@ -179,6 +182,8 @@ int main(int argc, char** argv)
         j++;
         File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
+
+
 
     }
     return 0;
