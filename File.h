@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -8,11 +8,11 @@ class DiscreteDataTime;
 
 class File {
 private:
-    /// @param Путь файла
+    /// @param РџСѓС‚СЊ С„Р°Р№Р»Р°
     std::string path;
-    /// @param Номер строки, откуда нужно считать значение
+    /// @param РќРѕРјРµСЂ СЃС‚СЂРѕРєРё, РѕС‚РєСѓРґР° РЅСѓР¶РЅРѕ СЃС‡РёС‚Р°С‚СЊ Р·РЅР°С‡РµРЅРёРµ
     int lineNumber;
-    /// @param Считанное из файла значение
+    /// @param РЎС‡РёС‚Р°РЅРЅРѕРµ РёР· С„Р°Р№Р»Р° Р·РЅР°С‡РµРЅРёРµ
     std::string currentValue;
     std::ifstream fin;
     void readValue();

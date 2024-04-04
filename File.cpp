@@ -1,4 +1,4 @@
-#include "File.h"
+ï»¿#include "File.h"
 
 
 
@@ -10,7 +10,7 @@ File::File(std::string path, int lineNumber) {
     }
 
 File::File() {
-}
+};
 
 bool File::fileStatus()
 {
@@ -23,31 +23,31 @@ void File::readValue() {
     fin.open(path);
     setlocale(LC_ALL, "rus");
     if (!fin.is_open()) {
-        std::cout << "Îøèáêà îòêðûòèÿ ôàéëà " << path << std::endl;
+        std::cout << "ÐžÑˆÐ¸Ð±ÐºÐ° Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ð¸Ñ Ñ„Ð°Ð¹Ð»Ð° " << path << std::endl;
         flag = false;
     }
     else {
-        // Ïåðåìåùàåì óêàçàòåëü íà íóæíóþ ñòðîêó
-        bool insufficientLinesErrorDisplayed = false; // Ïåðåìåííàÿ äëÿ îòñëåæèâàíèÿ âûâîäà ñîîáùåíèÿ îá îøèáêå
+        // ÐŸÐµÑ€ÐµÐ¼ÐµÑ‰Ð°ÐµÐ¼ ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ð½ÑƒÐ¶Ð½ÑƒÑŽ ÑÑ‚Ñ€Ð¾ÐºÑƒ
+        bool insufficientLinesErrorDisplayed = false; // ÐŸÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ð°Ñ Ð´Ð»Ñ Ð¾Ñ‚ÑÐ»ÐµÐ¶Ð¸Ð²Ð°Ð½Ð¸Ñ Ð²Ñ‹Ð²Ð¾Ð´Ð° ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð¾Ð± Ð¾ÑˆÐ¸Ð±ÐºÐµ
         for (int i = 1; i < lineNumber; ++i) {
             std::string line;
             if (!std::getline(fin, line)) {
                 if (!insufficientLinesErrorDisplayed) {
-                    std::cerr << "Íåäîñòàòî÷íî ñòðîê â ôàéëå!" << std::endl;
+                    std::cerr << "ÐÐµÐ´Ð¾ÑÑ‚Ð°Ñ‚Ð¾Ñ‡Ð½Ð¾ ÑÑ‚Ñ€Ð¾Ðº Ð² Ñ„Ð°Ð¹Ð»Ðµ!" << std::endl;
                     flag = false;
-                    insufficientLinesErrorDisplayed = true; // Óñòàíàâëèâàåì ôëàã, ÷òîáû ñîîáùåíèå âûâîäèëîñü òîëüêî îäèí ðàç
+                    insufficientLinesErrorDisplayed = true; // Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ñ„Ð»Ð°Ð³, Ñ‡Ñ‚Ð¾Ð±Ñ‹ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð»Ð¾ÑÑŒ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¾Ð´Ð¸Ð½ Ñ€Ð°Ð·
                 }
-                return; // Ïðåêðàùàåì âûïîëíåíèå ôóíêöèè, òàê êàê ñòðîê íå õâàòàåò
+                return; // ÐŸÑ€ÐµÐºÑ€Ð°Ñ‰Ð°ÐµÐ¼ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸, Ñ‚Ð°Ðº ÐºÐ°Ðº ÑÑ‚Ñ€Ð¾Ðº Ð½Ðµ Ñ…Ð²Ð°Ñ‚Ð°ÐµÑ‚
             }
         }
-        // Ñ÷èòûâàåì çíà÷åíèå èç íóæíîé ñòðîêè
+        // Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð¸Ð· Ð½ÑƒÐ¶Ð½Ð¾Ð¹ ÑÑ‚Ñ€Ð¾ÐºÐ¸
         std::string line;
         if (!std::getline(fin, line)) {
-            std::cerr << "Îøèáêà ïðè ÷òåíèè ñòðîêè " << lineNumber << std::endl;
+            std::cerr << "ÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ Ñ‡Ñ‚ÐµÐ½Ð¸Ð¸ ÑÑ‚Ñ€Ð¾ÐºÐ¸ " << lineNumber << std::endl;
             flag = false;
             return;
         }
-        // Ïðèñâàèâàåì ñ÷èòàííóþ ñòðîêó currentValue
+        // ÐŸÑ€Ð¸ÑÐ²Ð°Ð¸Ð²Ð°ÐµÐ¼ ÑÑ‡Ð¸Ñ‚Ð°Ð½Ð½ÑƒÑŽ ÑÑ‚Ñ€Ð¾ÐºÑƒ currentValue
         currentValue = line;
     }
    

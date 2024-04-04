@@ -1,12 +1,12 @@
-#include "TransportEquation.h"
+п»ї#include "TransportEquation.h"
 
 TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow)
 {
-    /// @param volumeFlow - объемный расход
+    /// @param volumeFlow - РѕР±СЉРµРјРЅС‹Р№ СЂР°СЃС…РѕРґ
     this->volumeFlow = volumeFlow;
-    ///@param n - количество точек расчетной сетки;
+    ///@param n - РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє СЂР°СЃС‡РµС‚РЅРѕР№ СЃРµС‚РєРё;
     this->n = pipeline_characteristics.n;
-    /// @param pipeline_characteristics - параметры трубопровода
+    /// @param pipeline_characteristics - РїР°СЂР°РјРµС‚СЂС‹ С‚СЂСѓР±РѕРїСЂРѕРІРѕРґР°
     this->pipeline_characteristics = pipeline_characteristics;
     
 }
@@ -15,22 +15,22 @@ void TransportEquation::methodCharacteristic(vector<double>& current_layer, vect
 {
   /*  vector<double> current_layer = buffer.current();
     vector<double> previous_layer = buffer.previous();*/
-    // Получение ссылок на текущий и предыдущий слои буфера
+    // РџРѕР»СѓС‡РµРЅРёРµ СЃСЃС‹Р»РѕРє РЅР° С‚РµРєСѓС‰РёР№ Рё РїСЂРµРґС‹РґСѓС‰РёР№ СЃР»РѕРё Р±СѓС„РµСЂР°
     for (size_t i = 1; i < n; i++)
     {
         current_layer[i] = previous_layer[i - 1];
     }
-    // Слой current_layer на следующем шаге должен стать предыдущим. 
-    // Для этого сместим индекс текущего слоя в буфере на единицу
+    // РЎР»РѕР№ current_layer РЅР° СЃР»РµРґСѓСЋС‰РµРј С€Р°РіРµ РґРѕР»Р¶РµРЅ СЃС‚Р°С‚СЊ РїСЂРµРґС‹РґСѓС‰РёРј. 
+    // Р”Р»СЏ СЌС‚РѕРіРѕ СЃРјРµСЃС‚РёРј РёРЅРґРµРєСЃ С‚РµРєСѓС‰РµРіРѕ СЃР»РѕСЏ РІ Р±СѓС„РµСЂРµ РЅР° РµРґРёРЅРёС†Сѓ
     current_layer[0] = left_condition_sulfar;
 }
 
-/// @brief get_speed - метод расчета скорости по объемному расходу 
+/// @brief get_speed - РјРµС‚РѕРґ СЂР°СЃС‡РµС‚Р° СЃРєРѕСЂРѕСЃС‚Рё РїРѕ РѕР±СЉРµРјРЅРѕРјСѓ СЂР°СЃС…РѕРґСѓ 
 double TransportEquation::get_speed() {
     return volumeFlow / pipeline_characteristics.get_inner_square();
 }
 
-/// @brief get_dt - метод получения шага времени dt
+/// @brief get_dt - РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ С€Р°РіР° РІСЂРµРјРµРЅРё dt
 double TransportEquation::get_dt()
 {
     double speed = get_speed();

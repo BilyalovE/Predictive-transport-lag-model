@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,30 +12,30 @@
 class TransportEquation
 {
     double volumeFlow;
-    /// @param n - количество точек расчетной сетки;
+    /// @param n - РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє СЂР°СЃС‡РµС‚РЅРѕР№ СЃРµС‚РєРё;
     int n;
-    /// @param dt - шаг во времени из условия Куранта;
+    /// @param dt - С€Р°Рі РІРѕ РІСЂРµРјРµРЅРё РёР· СѓСЃР»РѕРІРёСЏ РљСѓСЂР°РЅС‚Р°;
     double dt;
-    /// @param speed - скорость движения нефти
+    /// @param speed - СЃРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ РЅРµС„С‚Рё
     double speed;
-    /// @param pipeline_characteristics - параметры трубопровода
+    /// @param pipeline_characteristics - РїР°СЂР°РјРµС‚СЂС‹ С‚СЂСѓР±РѕРїСЂРѕРІРѕРґР°
     Pipeline_parameters pipeline_characteristics;
 public:
-    /// @brief Конструктор класса Block_1
-    /// @param pipeline_characteristics - Структура исходных параметров трубопровода
-    /// @param n - количество точек расчетной сетки;
-    /// @param j - счетчик текущего слоя
+    /// @brief РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° Block_1
+    /// @param pipeline_characteristics - РЎС‚СЂСѓРєС‚СѓСЂР° РёСЃС…РѕРґРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ С‚СЂСѓР±РѕРїСЂРѕРІРѕРґР°
+    /// @param n - РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє СЂР°СЃС‡РµС‚РЅРѕР№ СЃРµС‚РєРё;
+    /// @param j - СЃС‡РµС‚С‡РёРє С‚РµРєСѓС‰РµРіРѕ СЃР»РѕСЏ
     TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow);
 
-    // @brief methodCharacteristic - метод характеристик, рассчитывающий слои
-    /// @param buffer - буфер, который для расчёта хранит 2 слоя (текущий и прядущий);
-    /// @param left_condition - граничное условие для параметра нефти.
+    // @brief methodCharacteristic - РјРµС‚РѕРґ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРє, СЂР°СЃСЃС‡РёС‚С‹РІР°СЋС‰РёР№ СЃР»РѕРё
+    /// @param buffer - Р±СѓС„РµСЂ, РєРѕС‚РѕСЂС‹Р№ РґР»СЏ СЂР°СЃС‡С‘С‚Р° С…СЂР°РЅРёС‚ 2 СЃР»РѕСЏ (С‚РµРєСѓС‰РёР№ Рё РїСЂСЏРґСѓС‰РёР№);
+    /// @param left_condition - РіСЂР°РЅРёС‡РЅРѕРµ СѓСЃР»РѕРІРёРµ РґР»СЏ РїР°СЂР°РјРµС‚СЂР° РЅРµС„С‚Рё.
     void methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar) ;
 
-    /// @brief get_speed - метод расчета скорости по расходу (расход может быть интерполирован)
+    /// @brief get_speed - РјРµС‚РѕРґ СЂР°СЃС‡РµС‚Р° СЃРєРѕСЂРѕСЃС‚Рё РїРѕ СЂР°СЃС…РѕРґСѓ (СЂР°СЃС…РѕРґ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёРЅС‚РµСЂРїРѕР»РёСЂРѕРІР°РЅ)
     double get_speed();
 
-    /// @brief get_dt - метод получения шага времени dt
+    /// @brief get_dt - РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ С€Р°РіР° РІСЂРµРјРµРЅРё dt
     double get_dt();
 };
 

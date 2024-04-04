@@ -94,19 +94,6 @@ public:
 };
 
 
-
-class TimeArrive {
-    Time timeDelay;
-    DiscreteDataTime discreteDataTime;
-public:
-    TimeArrive(const Time& timeDelay, const DiscreteDataTime& discreteDataTime)
-        : timeDelay(timeDelay), discreteDataTime(discreteDataTime) {}
-};
-
-
-
-
-
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
@@ -131,7 +118,7 @@ int main(int argc, char** argv)
     /// @param Структура параметров трубопровода
     Pipeline_parameters  pipeline_characteristics;
     /// @param Начальное значение содержания серы в бензине каткрекинга в трубе
-    double initial_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/data txt/sulfar.txt", 2);
+    double initial_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/sulfar.txt", 2);
 
     /// Предполагаем, что в начальный момент времени всю трубу заполняют бензин каткрекинга с начальными параметрами initial_condition_sulfar
     /// @param Начальный слой по плотности
@@ -143,14 +130,14 @@ int main(int argc, char** argv)
     ring_buffer_t <vector<double>> buffer(number_layers_buffer, initial_sulfar_layer);
     /// Начало моделирования с 3 строки
     int j = 3;
-    File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
+    File file("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/discrete analysis data time.txt", j);
     bool flag = true;
     double flow;
     while (flag) {
-        // Захват времени начала выполнения
-        auto start = std::chrono::high_resolution_clock::now();
+        //// Захват времени начала выполнения
+        //auto start = std::chrono::high_resolution_clock::now();
         /// @param Измеренное значение содержания серы в бензине каткрекинга в трубе
-        double input_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/data txt/sulfar.txt", j); ;
+        double input_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/sulfar.txt", j); ;
 
         /// Расчёт произвольного числа слоев (solver_parameters.number_layers) через вызов функции solver в цикле
         /// @param sum_dt -  сумма времени моделирования 
@@ -158,7 +145,7 @@ int main(int argc, char** argv)
         double speed = 0;
         /// @param - счетчик слоя серы на момент  моделирования.
         int i = 0;
-        VolumeFlow volumeFlow("D:/source/diplop AT-20-01/data txt/mass flow.txt", "D:/source/diplop AT-20-01/data txt/density.txt", j);
+        VolumeFlow volumeFlow("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/mass flow.txt", "D:/source/diplop AT-20-01/Predictive transport lag model/data txt/density.txt", j);
         flow = volumeFlow.getVolumeFlow();
         do {
             TransportEquation transportEquation(pipeline_characteristics, flow);
@@ -177,9 +164,9 @@ int main(int argc, char** argv)
         //std::locale::global(std::locale("ru_RU.UTF-8"));
         setlocale(LC_ALL, "rus");
         Time timeDelay(sum_dt);
-        OutFile outFileDelay("D:/source/diplop AT-20-01/data txt/transport delay time.txt", timeDelay);
-        outFileDelay.outPut();
-        DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
+        OutFile outFileDelay("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/transport delay time.txt", timeDelay);
+        /*outFileDelay.outPut();
+        DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);*/
         /*std::cout << "Время " << int(sum_dt) << std::endl;
 
         std::cout << "Скорость " << speed << std::endl;*/
@@ -192,8 +179,8 @@ int main(int argc, char** argv)
         //// Вывод продолжительности выполнения
         //std::cout << "Время выполнения: " << duration.count() << " миллисекунд" << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::seconds(1)); // Задержка в 1 секунду
-        std::cout << "Прошла 1 секунда\n";
+        //std::this_thread::sleep_for(std::chrono::seconds(1)); // Задержка в 1 секунду
+        //std::cout << "Прошла 1 секунда\n";
         j++;
         File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
