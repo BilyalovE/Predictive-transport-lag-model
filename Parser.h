@@ -48,22 +48,18 @@ public:
     };
 };
 
-class DiscreteDataTime : protected File {
-    /// @param Дата и время как строка
+class DiscreteDataTime {
     std::string strDataTime;
-    /// @param Время как строка
-    std::string strTime;
-    /// @param Дата как строка
     std::string strData;
-    /// @param Время как число секунд int
+    std::string strTime;
     int totalSeconds;
-    /// @param структура данных для отдельного хранения даты и времени
     std::pair<std::string, std::string> splitDataTime;
+    File file;
 
     std::pair<std::string, std::string> splitString(const std::string& strDataTime) {
         std::string strData;
         std::string strTime;
-        bool foundSpace = false; // флаг, указывающий, найден ли пробел
+        bool foundSpace = false;
 
         for (char ch : strDataTime) {
             if (ch == ' ') {
@@ -79,7 +75,6 @@ class DiscreteDataTime : protected File {
         return std::make_pair(strData, strTime);
     }
 
-    /// @brief Метод для преобразования времени формата "чч:мм:сс" в количество секунд
     int timeStringToSeconds(const std::string& strTime) {
         int hours, minutes, seconds;
         char delimiter;
@@ -87,39 +82,31 @@ class DiscreteDataTime : protected File {
         std::istringstream iss(strTime);
         iss >> hours >> delimiter >> minutes >> delimiter >> seconds;
 
-        // Вычисляем общее количество секунд
         return hours * 3600 + minutes * 60 + seconds;
     }
 
 public:
-    DiscreteDataTime() { 
-        path(0); lineNumber(0) };
+    DiscreteDataTime(std::string path, int lineNumber) : file(path, lineNumber) {}
 
-    DiscreteDataTime(std::string path, int lineNumber) : File(path, lineNumber) {};
-    /// @brief Метод возврата даты и времени как строки
     std::string getStrDataTime() {
-        strDataTime = getValue();
+        strDataTime = file.;
         return strDataTime;
     }
 
-    /// @brief Метод возврата даты как строки
     std::string getStrData() {
-        splitDataTime = splitString(strDataTime);
+        splitDataTime = splitString(getStrDataTime());
         strData = splitDataTime.first;
         return strData;
     }
 
-    /// @brief Метод возврата времени как строки
     std::string getStrTime() {
-        splitDataTime = splitString(strDataTime);
+        splitDataTime = splitString(getStrDataTime());
         strTime = splitDataTime.second;
         return strTime;
     }
 
-    /// @brief Метод возврата времени как числа секунд формата int
     int getIntSecTime() {
-        strTime = getStrTime();
-        totalSeconds = timeStringToSeconds(strTime);
+        totalSeconds = timeStringToSeconds(getStrTime());
         return totalSeconds;
     }
 };

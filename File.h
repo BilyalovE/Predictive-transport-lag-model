@@ -23,6 +23,7 @@ protected:
 public:
     
     File(std::string path, int lineNumber);
+    File();
     bool fileStatus();
     ~File();
 };

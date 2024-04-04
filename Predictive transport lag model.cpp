@@ -33,7 +33,7 @@ class Time {
     int hours;
 public:
     
-    Time() : timeDelay(0) {} // Конструктор по умолчанию
+   Time() {} // Конструктор по умолчанию
 
     Time(int timeDelay) {
         this->timeDelay = timeDelay;
@@ -61,21 +61,19 @@ private:
     std::string path;
     std::ofstream fout;
     Time timeDelay;
-    DiscreteDataTime discreteDataTime;
+
 public:
     OutFile(std::string path, const Time& timeDelay) {
         this->path = path;
         this->timeDelay = timeDelay;
     };
 
-    OutFile(std::string path, const DiscreteDataTime& discreteDataTime, const Time& timeDelay) {
-        this->path = path;
-        this->timeDelay = timeDelay;
-        this->discreteDataTime = discreteDataTime;
+    OutFile() {
+        
     };
-    
 
-    void outPut() 
+   
+    virtual void outPut() 
     {
         fout.open(path, std::ofstream::app);
         if (!fout.is_open())  
@@ -93,6 +91,18 @@ public:
         if (fout.is_open())
             fout.close();
     };
+};
+
+
+
+class TimeArrive {
+    Time timeDelay;
+    DiscreteDataTime discreteDataTime;
+public:
+    TimeArrive(const Time& timeDelay, const DiscreteDataTime& discreteDataTime) {
+        this->timeDelay = timeDelay;
+        this->discreteDataTime = discreteDataTime;
+    }
 };
 
 
@@ -172,7 +182,6 @@ int main(int argc, char** argv)
         OutFile outFileDelay("D:/source/diplop AT-20-01/data txt/transport delay time.txt", timeDelay);
         outFileDelay.outPut();
         DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
-        OutFile discreteArriveDataTime("D:/source/diplop AT-20-01/data txt/discrete arrive data time.txt", discreteDataTime, timeDelay);
         /*std::cout << "Время " << int(sum_dt) << std::endl;
 
         std::cout << "Скорость " << speed << std::endl;*/
