@@ -4,6 +4,7 @@
 #include <iostream>
 #include <locale>
 
+class DiscreteDataTime;
 
 class File {
 private:
@@ -17,6 +18,7 @@ private:
     void readValue();
     bool flag = true;
 
+    friend DiscreteDataTime;
 protected:
     std::string getValue();
 

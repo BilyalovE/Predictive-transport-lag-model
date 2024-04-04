@@ -99,10 +99,8 @@ class TimeArrive {
     Time timeDelay;
     DiscreteDataTime discreteDataTime;
 public:
-    TimeArrive(const Time& timeDelay, const DiscreteDataTime& discreteDataTime) {
-        this->timeDelay = timeDelay;
-        this->discreteDataTime = discreteDataTime;
-    }
+    TimeArrive(const Time& timeDelay, const DiscreteDataTime& discreteDataTime)
+        : timeDelay(timeDelay), discreteDataTime(discreteDataTime) {}
 };
 
 

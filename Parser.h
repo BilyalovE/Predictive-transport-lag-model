@@ -86,10 +86,11 @@ class DiscreteDataTime {
     }
 
 public:
-    DiscreteDataTime(std::string path, int lineNumber) : file(path, lineNumber) {}
+    DiscreteDataTime() {}
+    DiscreteDataTime(std::string path, int lineNumber) {}
 
     std::string getStrDataTime() {
-        strDataTime = file.;
+        strDataTime = file.getValue();
         return strDataTime;
     }
 

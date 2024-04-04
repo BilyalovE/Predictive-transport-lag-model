@@ -1,7 +1,7 @@
 #include "File.h"
 
 
-class DiscreteDataTime;
+
 
 File::File(std::string path, int lineNumber) {
         this->path = path;
@@ -50,7 +50,7 @@ void File::readValue() {
         // Присваиваем считанную строку currentValue
         currentValue = line;
     }
-    friend DiscreteDataTime;
+   
 }
 
 
