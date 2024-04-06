@@ -159,7 +159,7 @@ int main(int argc, char** argv)
             speed = transportEquation.get_speed();
             buffer.advance(1);
             i++;
-        } while (sum_dt * speed <= pipeline_characteristics.L + pipeline_characteristics.get_dx());
+        } while (sum_dt * speed <= pipeline_characteristics.L + pipeline_characteristics.get_dx()); // пока качество с точки в начале трубы полностью не выйдет из колнцв трубы 
         //// Устанавливаем русскую локаль
         //std::locale::global(std::locale("ru_RU.UTF-8"));
         setlocale(LC_ALL, "rus");
