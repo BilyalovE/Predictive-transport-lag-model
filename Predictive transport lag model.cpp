@@ -61,11 +61,13 @@ private:
     std::string path;
     std::ofstream fout;
     Time timeDelay;
+    double sulfar;
 
 public:
-    OutFile(std::string path, const Time& timeDelay) {
+    OutFile(std::string path, const Time& timeDelay, double sulfar) {
         this->path = path;
         this->timeDelay = timeDelay;
+        this->sulfar =sulfar;
     };
 
     OutFile() {
@@ -83,7 +85,7 @@ public:
         else 
         {
             timeDelay.timeConvertation();
-            fout << timeDelay << std::endl;
+            fout << timeDelay  << "," << sulfar << std::endl;
         }
     }
 
@@ -118,55 +120,120 @@ int main(int argc, char** argv)
     /// @param Структура параметров трубопровода
     Pipeline_parameters  pipeline_characteristics;
     /// @param Начальное значение содержания серы в бензине каткрекинга в трубе
+   
     double initial_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/sulfar.txt", 2);
 
     /// Предполагаем, что в начальный момент времени всю трубу заполняют бензин каткрекинга с начальными параметрами initial_condition_sulfar
-    /// @param Начальный слой по плотности
+    /// @param Начальный слой по сере
     vector <double> initial_sulfar_layer(pipeline_characteristics.n, initial_condition_sulfar);
 
     // Создаем  буфер для решаемой задачи
     /// @param number_layers_buffer - количество слоев в буфере (для метода характеристик достаточно хранить 2 слоя - предыдущий и текущий слои)
     int number_layers_buffer = 2;
     ring_buffer_t <vector<double>> buffer(number_layers_buffer, initial_sulfar_layer);
-    /// Начало моделирования с 3 строки
+   
+    /// @param Начало моделирования с 3 строки
     int j = 3;
     File file("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/discrete analysis data time.txt", j);
     bool flag = true;
     double flow;
+    
     while (flag) {
+       
+        /// @param Измеренное значение содержания серы в бензине каткрекинга в трубе
+        double input_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/sulfar.txt", j);
+       
         //// Захват времени начала выполнения
         //auto start = std::chrono::high_resolution_clock::now();
-        /// @param Измеренное значение содержания серы в бензине каткрекинга в трубе
-        double input_condition_sulfar = call_sulfar("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/sulfar.txt", j); ;
-
+      
         /// Расчёт произвольного числа слоев (solver_parameters.number_layers) через вызов функции solver в цикле
         /// @param sum_dt -  сумма времени моделирования 
+        double dt = 0;
         double sum_dt = 0;
+        double sum_T = 0;
         double speed = 0;
-        /// @param - счетчик слоя серы на момент  моделирования.
+        double sum_L = 0;
+        /// @param abs_error - заданная погрешность колебания серы
+        double abs_error = 5;
+        /// @param i - счетчик слоя серы на момент  моделирования.
         int i = 0;
-        VolumeFlow volumeFlow("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/mass flow.txt", "D:/source/diplop AT-20-01/Predictive transport lag model/data txt/density.txt", j);
-        flow = volumeFlow.getVolumeFlow();
-        do {
+        ///@param discreteTimeAnalyze - дискретное время анализа изменения расхода, [c]
+        double discreteTimeAnalyze = 60;
+        
+        do
+            if (sum_dt <= discreteTimeAnalyze)
+            {
+            VolumeFlow volumeFlow("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/mass flow.txt", 
+                                  "D:/source/diplop AT-20-01/Predictive transport lag model/data txt/density.txt", j);
+
+            flow = volumeFlow.getVolumeFlow();
             TransportEquation transportEquation(pipeline_characteristics, flow);
-            if (i == 0) {
-                transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), input_condition_sulfar);
+            transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), input_condition_sulfar);
+            speed = transportEquation.get_speed();
+            dt = transportEquation.get_dt();
+            sum_dt += dt;
+            sum_T  += dt;
+            sum_L += dt * speed;
+            buffer.advance(1);
+            ///*do {
+            //    TransportEquation transportEquation(pipeline_characteristics, flow);
+            //    if (i == 0) {
+            //        transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), input_condition_sulfar);
+            //    }
+            //    else {
+            //        transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), 0);
+            //    }
+            //    dt = transportEquation.get_dt();
+            //    sum_dt += dt;
+            //    speed = transportEquation.get_speed();
+            //    sum_L += dt * speed;
+            //    buffer.advance(1);*/
+            //    i++; 
             }
             else {
-                transportEquation.methodCharacteristic(buffer.current(), buffer.previous(), 0);
+                j++;
+                File file("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/discrete analysis data time.txt", j);
+                flag = file.fileStatus();
+                if (flag) {
+                    sum_dt = 0;
+                    double previous_sulfal = input_condition_sulfar;
+                    double current_sulfar = call_sulfar("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/sulfar.txt", j);;
+
+                    /// Заходит стабильное сырье с колебаниями серы меньше заданной погрешности
+                    if (abs(current_sulfar - previous_sulfal) <= abs_error) {
+                        input_condition_sulfar = previous_sulfal;
+                    }
+                    else {
+                        sum_L = 0;
+                        sum_T = 0;
+                        input_condition_sulfar = current_sulfar;
+                    }
+                    
+                }
+                else {
+                    std::cout << "Ошибка  файла !!!!"  << std::endl;
+                    return flag;
+                }
+                
             }
-            sum_dt += transportEquation.get_dt();
-            speed = transportEquation.get_speed();
-            buffer.advance(1);
-            i++;
-        } while (sum_dt * speed <= pipeline_characteristics.L + pipeline_characteristics.get_dx()); // пока качество с точки в начале трубы полностью не выйдет из колнцв трубы 
+        while (sum_L <= pipeline_characteristics.L);
+        setlocale(LC_ALL, "rus");
+        Time timeDelay(sum_T);
+        OutFile outFileDelay("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/transport delay time.txt", timeDelay, input_condition_sulfar);
+        std::cout << j << std::endl;
+        outFileDelay.outPut();
+
+       /* j++;*/
+        /*File file("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/discrete analysis data time.txt", j);
+        flag = file.fileStatus();*/
+        
         //// Устанавливаем русскую локаль
         //std::locale::global(std::locale("ru_RU.UTF-8"));
-        setlocale(LC_ALL, "rus");
-        Time timeDelay(sum_dt);
-        OutFile outFileDelay("D:/source/diplop AT-20-01/Predictive transport lag model/data txt/transport delay time.txt", timeDelay);
-        /*outFileDelay.outPut();
-        DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);*/
+        
+       
+
+
+        //DiscreteDataTime discreteDataTime("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
         /*std::cout << "Время " << int(sum_dt) << std::endl;
 
         std::cout << "Скорость " << speed << std::endl;*/
@@ -180,13 +247,8 @@ int main(int argc, char** argv)
         //std::cout << "Время выполнения: " << duration.count() << " миллисекунд" << std::endl;
 
         //std::this_thread::sleep_for(std::chrono::seconds(1)); // Задержка в 1 секунду
-        //std::cout << "Прошла 1 секунда\n";
-        j++;
-        File file("D:/source/diplop AT-20-01/data txt/discrete analysis data time.txt", j);
-        flag = file.fileStatus();
-
-
-
+        //std::cout << "Прошла 1 секунда\n"
     }
+
     return 0;
 }
