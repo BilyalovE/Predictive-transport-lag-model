@@ -133,10 +133,15 @@ int main(int argc, char** argv)
     }
     
     std::cout << size2 << std::endl;
+    std::cout << sulfar[1] << std::endl;
     std::cout << sulfar[499] << std::endl;
     std::cout << flow[499] << std::endl;
+
+
+
     delete[] sulfar;
     delete[] flow;
 
+   
     return 0;
 }
