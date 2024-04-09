@@ -1,6 +1,6 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipeline_characteristics, const std::vector <double> volumeFlow)
 {
     /// @param volumeFlow - объемный расход
     this->volumeFlow = volumeFlow;

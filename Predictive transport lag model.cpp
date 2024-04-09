@@ -22,20 +22,20 @@
 #include <windows.h>
 
 
-double callSulfar(std::string path, int lineNumber) {
+void appendSulfar(std::vector <double> &sulf, std::string path, int lineNumber) {
     Sulfar sulfar(path, lineNumber); // Имя файла и номер строки, которую нужно считать
-    return sulfar.getSulfar();
+    sulf.push_back(sulfar.getSulfar());
 }
 
 
-double callVolumeFlow(std::string path1, std::string path2, int lineNumber) {
+void appendVolumeFlow(std::vector <double>& flow, std::string path1, std::string path2, int lineNumber) {
     VolumeFlow volumeFlow(path1, path2, lineNumber); // Имя файла и номер строки, которую нужно считать
-    return volumeFlow.getVolumeFlow();
+    flow.push_back(volumeFlow.getVolumeFlow());
 }
 
-double callDiscreteDataTime(std::string path, int lineNumber) {
+void appendDiscreteDataTime(std::vector <double>& time, std::string path, int lineNumber) {
     DiscreteDataTime discreteDataTime(path, lineNumber); // Имя файла и номер строки, которую нужно считать
-    return discreteDataTime.getIntSecTime();
+    time.push_back(discreteDataTime.getIntSecTime());
 }
 
 class Time {
@@ -107,53 +107,87 @@ public:
     };
 };
 
-void push_back(double*& arr, int& size, const double value) {
-    double* newArray = new double[size + 1];
-    for (int i = 0; i < size; i++) {
-        newArray[i] = arr[i];
-    }
-    newArray[size] = value;
-    size++;
-    delete arr;
-    arr = newArray;
-}
+//void push_back(double*& arr, int& size, const double value) {
+//    double* newArray = new double[size + 1];
+//    for (int i = 0; i < size; i++) {
+//        newArray[i] = arr[i];
+//    }
+//    newArray[size] = value;
+//    size++;
+//    delete arr;
+//    arr = newArray;
+//}
 
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
     setlocale(LC_ALL, "rus");
-    int sizeVecSulfar = 0;
-    int sizeVecFlow = 0;
-    int sizeVecDisTime = 0;
+    //int sizeVecSulfar = 0;
+    //int sizeVecFlow = 0;
+   //int sizeVecDisTime = 0;
     
-
-    double* sulfar = new double[sizeVecSulfar];
+    /*double* sulfar = new double[sizeVecSulfar];
     double* flow = new double[sizeVecFlow];
     double* discreteTime = new double[sizeVecDisTime];
     bool flag = true;
-    int j = 2;
+    int j = 2;*/
+
+    std::vector <double> sulfar;
+    std::vector <double> volumeFlow;
+    std::vector <double> discreteTime;
+    bool flag = true;
+    int j = 2; 
     setlocale(LC_ALL, "rus");
+
     while (flag) {
-        push_back(sulfar, sizeVecSulfar, callSulfar("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j));
-        push_back(flow, sizeVecFlow, callVolumeFlow("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
-            "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/density.txt", j));
-        push_back(discreteTime, sizeVecDisTime, callDiscreteDataTime("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j));
+        appendSulfar(sulfar, "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j);
+        appendVolumeFlow(volumeFlow, "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
+            "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/density.txt", j);
+        appendDiscreteDataTime(discreteTime, "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
         j++;
         File file("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
     }
-    std::cout << sizeVecDisTime << std::endl;
-    std::cout << discreteTime[1] << std::endl;
-    std::cout << sulfar[1] << std::endl;
-    std::cout << sulfar[499] << std::endl;
-    std::cout << flow[499] << std::endl;
-    
+    /*std::cout << sulfar.size() << std::endl;
+    std::cout << sulfar[0] << std::endl;
+    std::cout << volumeFlow[0] << std::endl;
+    std::cout << discreteTime[0] << std::endl;*/
+
+   
+    // Создаем  буфер для решаемой задачи
+    /// @param number_layers_buffer - количество слоев в буфере (для метода характеристик достаточно хранить 2 слоя - предыдущий и текущий слои)
+    int number_layers_buffer = 2;
+    ring_buffer_t <std::vector<double>> buffer(2, sulfar);
+    /// @param sum_dt -  сумма времени моделирования 
+    double sum_dt = 0;
+    /// @param j - счетчик слоев
+    int j = 0;
+    // @param empty_pipe - подставляем на случай, если труба пустая
+    double empty_pipe{ 0 };
+    Pipeline_parameters pipe;
+    TransportEquation transport_equation(pipe, volumeFlow);
+   
+    do {
+        // Проверка выхода за границы массива серы
+        if (j < sulfar.size()) {
+            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[j]);
+            
+        }
+        else {
+            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe);
+            
+        }
+        //transport_equation.output_data(buffer, sum_dt);
+        buffer.advance(1);
+        sum_dt += transport_equation.get_dt();
+        j++;
+    } while (sum_dt <= pipe.T);
 
 
 
-    delete[] sulfar;
+    /*delete[] sulfar;
     delete[] flow;
-    delete[] discreteTime;
+    delete[] discreteTime;*/
    
     return 0;
 }
