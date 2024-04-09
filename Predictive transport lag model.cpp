@@ -170,11 +170,11 @@ int main(int argc, char** argv)
     do {
         // Проверка выхода за границы массива серы
         if (j < sulfar.size()) {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[j]);
+            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[j], j);
             
         }
         else {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe);
+            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, j);
             
         }
         //transport_equation.output_data(buffer, sum_dt);
