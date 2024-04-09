@@ -120,6 +120,7 @@ public:
 
     /// @brief Метод возврата времени как числа секунд формата int
     int getIntSecTime() {
+       
         strTime = getStrTime();
         totalSeconds = timeStringToSeconds(strTime);
         return totalSeconds;

@@ -137,14 +137,13 @@ int main(int argc, char** argv)
         push_back(sulfar, sizeVecSulfar, callSulfar("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j));
         push_back(flow, sizeVecFlow, callVolumeFlow("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
             "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/density.txt", j));
-        push_back(discreteTime, sizeVecFlow, callDiscreteDataTime("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j));
+        push_back(discreteTime, sizeVecDisTime, callDiscreteDataTime("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j));
         j++;
         File file("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
     }
-    
-
     std::cout << sizeVecDisTime << std::endl;
+    std::cout << discreteTime[1] << std::endl;
     std::cout << sulfar[1] << std::endl;
     std::cout << sulfar[499] << std::endl;
     std::cout << flow[499] << std::endl;
