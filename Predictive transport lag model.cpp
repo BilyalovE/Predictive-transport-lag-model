@@ -36,6 +36,7 @@ double callVolumeFlow(std::string path1, std::string path2, int lineNumber) {
 double callDiscreteDataTime(std::string path, int lineNumber) {
     DiscreteDataTime discreteDataTime(path, lineNumber); // Имя файла и номер строки, которую нужно считать
     return discreteDataTime.getIntSecTime();
+}
 
 class Time {
     int timeDelay;
@@ -131,6 +132,7 @@ int main(int argc, char** argv)
     double* discreteTime = new double[sizeVecDisTime];
     bool flag = true;
     int j = 2;
+    setlocale(LC_ALL, "rus");
     while (flag) {
         push_back(sulfar, sizeVecSulfar, callSulfar("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j));
         push_back(flow, sizeVecFlow, callVolumeFlow("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
@@ -142,17 +144,17 @@ int main(int argc, char** argv)
     }
     
 
-
     std::cout << sizeVecDisTime << std::endl;
     std::cout << sulfar[1] << std::endl;
     std::cout << sulfar[499] << std::endl;
     std::cout << flow[499] << std::endl;
+    
 
 
 
     delete[] sulfar;
     delete[] flow;
-
+    delete[] discreteTime;
    
     return 0;
 }

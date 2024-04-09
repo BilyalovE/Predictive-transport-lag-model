@@ -104,6 +104,7 @@ public:
 
     /// @brief Метод возврата даты как строки
     std::string getStrData() {
+        strDataTime = getValue();
         splitDataTime = splitString(strDataTime);
         strData = splitDataTime.first;
         return strData;
@@ -111,6 +112,7 @@ public:
 
     /// @brief Метод возврата времени как строки
     std::string getStrTime() {
+        strDataTime = getValue();
         splitDataTime = splitString(strDataTime);
         strTime = splitDataTime.second;
         return strTime;
