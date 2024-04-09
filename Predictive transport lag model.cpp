@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     // @param empty_pipe - подставляем на случай, если труба пустая
     double empty_pipe{ 0 };
     Pipeline_parameters pipe;
-    TransportEquation transport_equation(pipe, volumeFlow);
+    TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
    
     do {
         // Проверка выхода за границы массива серы

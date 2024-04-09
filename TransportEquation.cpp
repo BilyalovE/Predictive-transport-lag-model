@@ -1,6 +1,6 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double>)
 {
     /// @param volumeFlow - объемный расход
     this->volumeFlow = volumeFlow;
@@ -30,9 +30,10 @@ double TransportEquation::get_speed() {
     double square = pipe.get_inner_square();
     double speed{};
     if (j == 0) {
-        speed = (synthetic_time.volumetric_flow)[0] / square;
+        speed = (volumeFlow)[0] / square;
     }
     else {
+        LineInterpolation flow(volumeFlow, )
         double interpolation_Q = line_interpolation(synthetic_time.volumetric_flow, synthetic_time.time, dt);
         speed = interpolation_Q / square;
     }
