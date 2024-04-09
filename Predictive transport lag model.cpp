@@ -21,17 +21,21 @@
 #include <thread>
 #include <windows.h>
 
-double call_sulfar(std::string path, int lineNumber) {
+
+double callSulfar(std::string path, int lineNumber) {
     Sulfar sulfar(path, lineNumber); // Имя файла и номер строки, которую нужно считать
     return sulfar.getSulfar();
 }
 
 
-double call_flow(std::string path1, std::string path2, int lineNumber) {
+double callVolumeFlow(std::string path1, std::string path2, int lineNumber) {
     VolumeFlow volumeFlow(path1, path2, lineNumber); // Имя файла и номер строки, которую нужно считать
     return volumeFlow.getVolumeFlow();
 }
 
+double callDiscreteDataTime(std::string path, int lineNumber) {
+    DiscreteDataTime discreteDataTime(path, lineNumber); // Имя файла и номер строки, которую нужно считать
+    return discreteDataTime.getIntSecTime();
 
 class Time {
     int timeDelay;
@@ -117,22 +121,29 @@ void push_back(double*& arr, int& size, const double value) {
 int main(int argc, char** argv)
 {
     setlocale(LC_ALL, "rus");
-    int size1 = 0;
-    int size2 = 0;
-    double* sulfar = new double[size1];
-    double* flow = new double[size2];
+    int sizeVecSulfar = 0;
+    int sizeVecFlow = 0;
+    int sizeVecDisTime = 0;
+    
+
+    double* sulfar = new double[sizeVecSulfar];
+    double* flow = new double[sizeVecFlow];
+    double* discreteTime = new double[sizeVecDisTime];
     bool flag = true;
     int j = 2;
     while (flag) {
-        push_back(sulfar, size1, call_sulfar("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j));
-        push_back(flow, size2, call_flow("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
+        push_back(sulfar, sizeVecSulfar, callSulfar("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j));
+        push_back(flow, sizeVecFlow, callVolumeFlow("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
             "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/density.txt", j));
+        push_back(discreteTime, sizeVecFlow, callDiscreteDataTime("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j));
         j++;
         File file("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
     }
     
-    std::cout << size2 << std::endl;
+
+
+    std::cout << sizeVecDisTime << std::endl;
     std::cout << sulfar[1] << std::endl;
     std::cout << sulfar[499] << std::endl;
     std::cout << flow[499] << std::endl;
