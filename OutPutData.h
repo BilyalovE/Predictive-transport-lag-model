@@ -1,10 +1,12 @@
 #pragma once
-#include <iomanip>
-#include <pde_solvers/pde_solvers.h>
-#include <vector>
-#include <locale>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <locale.h>
+#include <fstream>
+#include <iomanip>
 #include <fixed/fixed.h>
+#include <pde_solvers/pde_solvers.h>
 #include "File.h"
 #include "Pipe.h"
 

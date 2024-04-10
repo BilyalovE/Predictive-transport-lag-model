@@ -1,16 +1,16 @@
 #include "OutPutData.h"
 
-OutPutData::OutPutData(std::string output_name, std::vector <double> & current_layer, double sum_dt)
+OutPutData::OutPutData(std::string output_name, std::vector <double> &current_layer, double sum_dt)
 {
     this->current_layer = current_layer;
     this->sum_dt = sum_dt;
     this->output_name = output_name;
 }
-/// @brief output_data - метод вывода слоев в файл формата csv
-   /// @param i - счётчик слоев;
-   /// @param solver_parameters - структура параметров, необходимых для реализации функции солвера ;
-   /// @param buffer - буфер, рассчитанный после солвера;
-   /// @param sum_dt - текущее время моделирования
+ /// @brief output_data - метод вывода слоев в файл формата csv
+ /// @param i - счётчик слоев;
+ /// @param  solver_parameters - структура параметров, необходимых для реализации функции солвера ;
+ /// @param buffer - буфер, рассчитанный после солвера;
+ /// @param sum_dt - текущее время моделирования
 void OutPutData::output_data()
 {
     // Используем пространство имен std
