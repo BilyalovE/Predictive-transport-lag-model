@@ -27,7 +27,7 @@ struct Pipeline_parameters
     }
 
     /// @param T - время моделирования, с (24 часа * 3600)
-    int T = 86400;
+    int T = 7000;
     /// @param - количество точек расчетной сетки;
-    int n = 5;
+    int n = 100;
 };

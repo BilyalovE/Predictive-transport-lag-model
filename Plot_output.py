@@ -3,13 +3,16 @@ import pandas as pd
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, TextBox
-"D:\source\block_3\quasi_stationary_models\Output.csv"
-rawData = pd.read_csv('Output.csv', encoding='windows-1251')
+
+rawData = pd.read_csv('C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/Результат моделирования.csv')
 parametersNames = rawData.columns.tolist()[2:]
 [timeLabel, coordLabel] = rawData.columns.tolist()[:2]
 plotsCount = len(parametersNames) 
 
-fig = plt.figure(figsize=(8, 5))
+
+
+fig = plt.figure(figsize=(11, 7))  # Установка размера фигуры на 11x7 дюймов
+
 
 axes = [plt.subplot(plotsCount, 1, _ + 1) for _ in range(plotsCount)]
 
@@ -25,11 +28,34 @@ def init_func():
         axes[i].set_ylabel(parametersNames[i])
         coordData = rawData[coordLabel]
         paramData = rawData[parametersNames[i]]
-        xLim = [min(coordData) - 0.1 * (max(coordData) - min(coordData)), max(coordData) + 0.1 * (max(coordData) - min(coordData))]
-        yLim = [min(paramData) - 0.1 * (max(paramData) - min(paramData)), max(paramData) + 0.1 * (max(paramData) - min(paramData))]
+        
+        # Проверяем, есть ли в данных значения NaN или Inf
+        if not np.isnan(paramData).any() and not np.isinf(paramData).any():
+            xLim = [0, max(coordData) + 100]  # Пределы оси x с 50 единицами после максимального значения
+            yLim = [0, max(paramData) + 30]    # Пределы оси y с 5 единицами после максимального значения
+        else:
+            # Если в данных есть значения NaN или Inf, устанавливаем пределы по умолчанию
+            xLim = [0, 1]
+            yLim = [0, 1]
+        
+        # Установка пределов для осей x и y
         axes[i].set_xlim(xLim)
         axes[i].set_ylim(yLim)
+        
+        # Установка шага для оси x
+        x_ticks = np.arange(0, xLim[1], 100)
+        axes[i].set_xticks(x_ticks)
+        
+        # Установка шага для оси y
+        y_ticks = np.arange(0, yLim[1], 10)
+        axes[i].set_yticks(y_ticks)
+
+        # Установка толщины линий графика
+        for line in axes[i].lines:
+            line.set_linewidth(100)  # Установка толщины линий на 2 точки
+        
     ini_draw()
+
         
 plots = list()
 def ini_draw(step=0):
@@ -55,9 +81,14 @@ if len(time_moments) != 1:
 
         time_slider.on_changed(change)
 
-plt.subplots_adjust(bottom=0.12)
-#plt.tight_layout()
+# Перед отображением графика установите размер окна
+fig.set_size_inches(11, 7)  # Установка размера окна на 11x7 дюймов
 
+
+#plt.tight_layout()
+# Настройка расположения графика в окне
+plt.subplots_adjust(top=0.95, bottom=0.2, right=0.95, left=0.05, hspace=1, wspace=1)
+plt.tight_layout()
 plt.show()
 
 
