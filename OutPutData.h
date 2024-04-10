@@ -15,12 +15,12 @@ class OutPutData
 {
 	Pipeline_parameters pipe;
 
-	std::vector<double> current_layer;
+	std::vector<double> previous_layer;
 	double sum_dt;
 	std::string output_name;
 
 public:
-	OutPutData(std::string output_name, std::vector <double>& current_layer, double sum_dt);
+	OutPutData(const std::string output_name, const std::vector <double>& previous_layer, double sum_dt);
 
 	void output_data();
 };

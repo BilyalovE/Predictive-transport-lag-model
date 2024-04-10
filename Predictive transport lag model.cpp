@@ -173,8 +173,9 @@ int main(int argc, char** argv)
     TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
    
     do {
+        
         // Проверка выхода за границы массива серы
-        if (j < sulfar.size()) {
+        if (k < sulfar.size()) {
             transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k], k);
             
         }
@@ -182,7 +183,7 @@ int main(int argc, char** argv)
             transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, k);
             
         }
-        OutPutData time_dt("Результат моделирования", buffer.current(), sum_dt);
+        OutPutData time_dt("Результат моделирования", buffer.previous(), sum_dt);
         time_dt.output_data();
         buffer.advance(1);
         sum_dt += transport_equation.get_dt();

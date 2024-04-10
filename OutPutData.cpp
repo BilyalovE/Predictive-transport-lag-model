@@ -1,8 +1,8 @@
 #include "OutPutData.h"
 
-OutPutData::OutPutData(std::string output_name, std::vector <double> &current_layer, double sum_dt)
+OutPutData::OutPutData(const std::string output_name, const std::vector <double> &previous_layer, double sum_dt)
 {
-    this->current_layer = current_layer;
+    this->previous_layer = previous_layer;
     this->sum_dt = sum_dt;
     this->output_name = output_name;
 }
@@ -19,10 +19,10 @@ void OutPutData::output_data()
     //0 слой с записью заголовка
     if (sum_dt == 0) {
         ofstream outFile(output_name + ".csv");
-        outFile << "Время,Координата,Плотность,Сера,Давление" << endl;
+        outFile << "Время,Координата,Сера" << endl;
         // Записать значения текущего слоя в файл
-        for (size_t i = 0; i < current_layer.size(); i++) {
-            outFile << sum_dt << "," << i * pipe.get_dx() << "," << current_layer[i]  << endl;
+        for (size_t i = 0; i < previous_layer.size(); i++) {
+            outFile << sum_dt << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
 
 
         }
@@ -32,8 +32,8 @@ void OutPutData::output_data()
     else {
         ofstream outFile(output_name + ".csv", ios::app);
         // Записать значения текущего слоя в файл
-        for (size_t i = 0; i < current_layer.size(); i++) {
-            outFile << sum_dt << "," << i * pipe.get_dx() << "," << current_layer[i]  << endl;
+        for (size_t i = 0; i < previous_layer.size(); i++) {
+            outFile << sum_dt << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
 
         }
         outFile.close();
