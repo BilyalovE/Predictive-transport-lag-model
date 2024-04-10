@@ -177,8 +177,8 @@ int main(int argc, char** argv)
             transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, j);
             
         }
-        OutPutData time_dt("вывод", buffer, sum_dt)
-        time_dt.output_data("Файл шага ", buffer, sum_dt);
+        OutPutData time_dt("вывод", buffer.current(), sum_dt);
+        time_dt.output_data();
         buffer.advance(1);
         sum_dt += transport_equation.get_dt();
         j++;
