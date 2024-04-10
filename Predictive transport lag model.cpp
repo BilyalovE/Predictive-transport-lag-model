@@ -14,12 +14,12 @@
 #include <pde_solvers/pde_solvers.h>
 #include "TransportEquation.h"
 #include "Pipe.h"
-#include <locale>
 #include "File.h"
 #include "Parser.h"
 #include <chrono>
 #include <thread>
 #include <windows.h>
+#include "OutPutData.h"
 
 
 void appendSulfar(std::vector <double> &sulf, std::string path, int lineNumber) {
@@ -121,7 +121,7 @@ public:
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
-    setlocale(LC_ALL, "rus");
+   
     //int sizeVecSulfar = 0;
     //int sizeVecFlow = 0;
    //int sizeVecDisTime = 0;
@@ -177,7 +177,8 @@ int main(int argc, char** argv)
             transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, j);
             
         }
-        //transport_equation.output_data(buffer, sum_dt);
+        OutPutData time_dt("вывод", buffer, sum_dt)
+        time_dt.output_data("Файл шага ", buffer, sum_dt);
         buffer.advance(1);
         sum_dt += transport_equation.get_dt();
         j++;
