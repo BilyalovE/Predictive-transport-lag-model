@@ -8,8 +8,9 @@
 
 // Подключаем необходимые библиотеки
 #include <iostream>
-#include <vector>
 #include <iomanip>
+#include <vector>
+
 #include <fixed/fixed.h>
 #include <pde_solvers/pde_solvers.h>
 #include "TransportEquation.h"
@@ -152,43 +153,40 @@ int main(int argc, char** argv)
     std::cout << sulfar[0] << std::endl;
     std::cout << volumeFlow[0] << std::endl;
     std::cout << discreteTime[0] << std::endl;*/
-
+    double initial_sulfar = 200;
+    Pipeline_parameters pipe;
+    /// @param Начальный слой по сере
+    std::vector <double> initial_sulfar_layer(pipe.n, initial_sulfar);
    
     // Создаем  буфер для решаемой задачи
     /// @param number_layers_buffer - количество слоев в буфере (для метода характеристик достаточно хранить 2 слоя - предыдущий и текущий слои)
     int number_layers_buffer = 2;
-    ring_buffer_t <std::vector<double>> buffer(2, sulfar);
-    /// @param sum_dt -  сумма времени моделирования 
-    double sum_dt = 0;
-    /// @param j - счетчик слоев
-    int j = 0;
-    // @param empty_pipe - подставляем на случай, если труба пустая
-    double empty_pipe{ 0 };
-    Pipeline_parameters pipe;
-    TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
+    //ring_buffer_t <std::vector<double>> buffer(2, initial_sulfar_layer);
+    ///// @param sum_dt -  сумма времени моделирования 
+    //double sum_dt = 0;
+    ///// @param k - счетчик слоев
+    //int k = 0;
+    //// @param empty_pipe - подставляем на случай, если труба пустая
+    //double empty_pipe{ 0 };
+  
+    //TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
    
-    do {
-        // Проверка выхода за границы массива серы
-        if (j < sulfar.size()) {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[j], j);
-            
-        }
-        else {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, j);
-            
-        }
-        OutPutData time_dt("вывод", buffer.current(), sum_dt);
-        time_dt.output_data();
-        buffer.advance(1);
-        sum_dt += transport_equation.get_dt();
-        j++;
-    } while (sum_dt <= pipe.T);
-
-
-
-    /*delete[] sulfar;
-    delete[] flow;
-    delete[] discreteTime;*/
+    //do {
+    //    //// Проверка выхода за границы массива серы
+    //    //if (j < sulfar.size()) {
+    //    //    transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k], k);
+    //    //    
+    //    //}
+    //    //else {
+    //    //    transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, k);
+    //    //    
+    //    //}
+    //    OutPutData time_dt("вывод", buffer.current(), sum_dt);
+    //    time_dt.output_data();
+    //    buffer.advance(1);
+    //    sum_dt += transport_equation.get_dt();
+    //    k++;
+    //} while (sum_dt <= pipe.T);
    
     return 0;
 }

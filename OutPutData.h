@@ -1,12 +1,13 @@
 #pragma once
+#include <iomanip>
 #include <pde_solvers/pde_solvers.h>
 #include <vector>
 #include <locale>
 #include <iostream>
-#include <iomanip>
-#include <pde_solvers/pde_solvers.h>
+#include <fixed/fixed.h>
 #include "File.h"
 #include "Pipe.h"
+
 
 class OutPutData
 {
