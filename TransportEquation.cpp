@@ -1,9 +1,9 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double>)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double> discreteTime)
 {
-    /// @param volumeFlow - объемный расход
     this->volumeFlow = volumeFlow;
+    this->discreteTime = discreteTime;
     ///@param n - количество точек расчетной сетки;
     this->n = pipe.n;
     /// @param pipeline_characteristics - параметры трубопровода
@@ -33,8 +33,9 @@ double TransportEquation::get_speed() {
         speed = (volumeFlow)[0] / square;
     }
     else {
-        LineInterpolation flow(volumeFlow, )
-        double interpolation_Q = line_interpolation(synthetic_time.volumetric_flow, synthetic_time.time, dt);
+
+        LineInterpolation flow(volumeFlow, discreteTime, dt);
+        double interpolation_Q = flow.line_interpolation();
         speed = interpolation_Q / square;
     }
     return speed;
@@ -47,6 +48,6 @@ double TransportEquation::get_speed() {
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    dt = pipe.get_dx() / speed;
+    this->dt = pipe.get_dx() / speed;
     return dt;
 }
