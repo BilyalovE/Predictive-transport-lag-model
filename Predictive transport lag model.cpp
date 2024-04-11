@@ -174,8 +174,8 @@ int main(int argc, char** argv)
     TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
     
     do {
-        LineInterpolation sulfar(sulfar, discreteTime, sum_dt);
-        interpolationSulfar = sulfar.line_interpolation();
+        LineInterpolation sulfarInt(sulfar, discreteTime, sum_dt);
+        interpolationSulfar = sulfarInt.line_interpolation();
 
         //// Проверка выхода за границы массива серы
         //if (k < sulfar.size()) {
