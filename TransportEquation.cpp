@@ -1,14 +1,13 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double> discreteTime)
 {
-    /// @param volumeFlow - объемный расход
     this->volumeFlow = volumeFlow;
+    this->discreteTime = discreteTime;
     ///@param n - количество точек расчетной сетки;
-    this->n = pipeline_characteristics.n;
+    this->n = pipe.n;
     /// @param pipeline_characteristics - параметры трубопровода
-    this->pipeline_characteristics = pipeline_characteristics;
-    
+    this->pipe = pipe;
 }
 
 void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
@@ -25,15 +24,29 @@ void TransportEquation::methodCharacteristic(vector<double>& current_layer, vect
     current_layer[0] = left_condition_sulfar;
 }
 
-/// @brief get_speed - метод расчета скорости по объемному расходу 
+/// @brief get_speed - метод расчета скорости по расходу (расход может быть интерполирован)
 double TransportEquation::get_speed() {
-    return volumeFlow / pipeline_characteristics.get_inner_square();
+    double square = pipe.get_inner_square();
+    double speed{0};
+    if (dt == 0) {
+        speed = (volumeFlow)[0] / square;
+    }
+    else {
+
+        LineInterpolation flow(volumeFlow, discreteTime, dt);
+        double interpolation_Q = flow.line_interpolation();
+        speed = interpolation_Q / square;
+    }
+    return speed;
 }
+
+
+
 
 /// @brief get_dt - метод получения шага времени dt
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    dt = pipeline_characteristics.get_dx() / speed;
+    this->dt += pipe.get_dx() / speed;
     return dt;
 }

@@ -8,24 +8,30 @@
 #include <fixed/fixed.h>
 #include <pde_solvers/pde_solvers.h>
 #include "Pipe.h"
+#include "LineInterpolation.h"
 
 class TransportEquation
 {
-    double volumeFlow;
+    /// @brief volumeFlow - Синтетический ряд расхода
+    std::vector <double> volumeFlow;
+    /// @brief discreteTime - Синтетический ряд времени изменения параметров
+    std::vector <double> discreteTime;
     /// @param n - количество точек расчетной сетки;
     int n;
     /// @param dt - шаг во времени из условия Куранта;
     double dt;
     /// @param speed - скорость движения нефти
     double speed;
-    /// @param pipeline_characteristics - параметры трубопровода
-    Pipeline_parameters pipeline_characteristics;
+    /// @param pipe - параметры трубопровода
+    Pipeline_parameters pipe;
+    
 public:
     /// @brief Конструктор класса Block_1
     /// @param pipeline_characteristics - Структура исходных параметров трубопровода
     /// @param n - количество точек расчетной сетки;
     /// @param j - счетчик текущего слоя
-    TransportEquation(Pipeline_parameters& pipeline_characteristics, double volumeFlow);
+    TransportEquation(const Pipeline_parameters& pipeline_characteristics, const std::vector <double> volumeFlow,
+        const std::vector <double> discreteTime);
 
     // @brief methodCharacteristic - метод характеристик, рассчитывающий слои
     /// @param buffer - буфер, который для расчёта хранит 2 слоя (текущий и прядущий);
