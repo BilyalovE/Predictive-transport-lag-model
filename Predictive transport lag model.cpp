@@ -170,21 +170,23 @@ int main(int argc, char** argv)
     int k = 0;
     // @param empty_pipe - подставляем на случай, если труба пустая
     double empty_pipe{ 0 };
-  
+    double interpolationSulfar{ 0 };
     TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
-   
+    
     do {
-        
+        LineInterpolation sulfar(sulfar, discreteTime, sum_dt);
+        interpolationSulfar = sulfar.line_interpolation();
 
-        // Проверка выхода за границы массива серы
-        if (k < sulfar.size()) {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k]);
-            
-        }
-        else {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe);
-            
-        }
+        //// Проверка выхода за границы массива серы
+        //if (k < sulfar.size()) {
+        //    transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k]);
+        //    
+        //}
+        //else {
+        //    transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe);
+        //    
+        //}
+        transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
         OutPutData time_dt("Результат моделирования", buffer.previous(), sum_dt);
         time_dt.output_data();
         buffer.advance(1);
