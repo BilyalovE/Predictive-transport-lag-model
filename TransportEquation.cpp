@@ -10,12 +10,11 @@ TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std:
     this->pipe = pipe;
 }
 
-void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar, int j)
+void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
 {
   /*  vector<double> current_layer = buffer.current();
     vector<double> previous_layer = buffer.previous();*/
     // Получение ссылок на текущий и предыдущий слои буфера
-    this->j = j;
     for (size_t i = 1; i < n; i++)
     {
         current_layer[i] = previous_layer[i - 1];
@@ -28,8 +27,8 @@ void TransportEquation::methodCharacteristic(vector<double>& current_layer, vect
 /// @brief get_speed - метод расчета скорости по расходу (расход может быть интерполирован)
 double TransportEquation::get_speed() {
     double square = pipe.get_inner_square();
-    double speed{};
-    if (j == 0) {
+    double speed{0};
+    if (dt == 0) {
         speed = (volumeFlow)[0] / square;
     }
     else {
@@ -48,6 +47,6 @@ double TransportEquation::get_speed() {
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    this->dt = pipe.get_dx() / speed;
+    this->dt += pipe.get_dx() / speed;
     return dt;
 }

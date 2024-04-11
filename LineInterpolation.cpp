@@ -22,6 +22,7 @@ double LineInterpolation::line_interpolation()
     for (int i = 1; i < size_array_param; i++) {
             if (dt >= array_time[i - 1] && dt <= array_time[i]) {
                 interpolation_param = (dt - array_time[i - 1]) / (array_time[i] - array_time[i - 1]) * (array_param[i] - array_param[i - 1]) + array_param[i - 1];
+                break;
             }
      }
     return interpolation_param;

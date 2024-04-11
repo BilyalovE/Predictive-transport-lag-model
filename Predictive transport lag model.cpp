@@ -151,9 +151,10 @@ int main(int argc, char** argv)
     }
     /*std::cout << sulfar.size() << std::endl;
     std::cout << sulfar[0] << std::endl;
-    std::cout << volumeFlow[0] << std::endl;
-    std::cout << discreteTime[0] << std::endl;*/
-
+    std::cout << volumeFlow[0] << std::endl;*/
+    std::cout << sulfar.size() << std::endl;
+    std::cout << discreteTime[1110] << std::endl;
+    std::cout << sulfar[1000] << std::endl;
     double initial_sulfar = 200;
     Pipeline_parameters pipe;
     /// @param Начальный слой по сере
@@ -174,19 +175,20 @@ int main(int argc, char** argv)
    
     do {
         
+
         // Проверка выхода за границы массива серы
         if (k < sulfar.size()) {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k], k);
+            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k]);
             
         }
         else {
-            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe, k);
+            transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe);
             
         }
         OutPutData time_dt("Результат моделирования", buffer.previous(), sum_dt);
         time_dt.output_data();
         buffer.advance(1);
-        sum_dt += transport_equation.get_dt();
+        sum_dt = transport_equation.get_dt();
         k++;
     } while (sum_dt <= pipe.T);
    

@@ -24,8 +24,7 @@ class TransportEquation
     double speed;
     /// @param pipe - параметры трубопровода
     Pipeline_parameters pipe;
-    /// @brief j - счетчик слоя
-    int j;
+    
 public:
     /// @brief Конструктор класса Block_1
     /// @param pipeline_characteristics - Структура исходных параметров трубопровода
@@ -37,7 +36,7 @@ public:
     // @brief methodCharacteristic - метод характеристик, рассчитывающий слои
     /// @param buffer - буфер, который для расчёта хранит 2 слоя (текущий и прядущий);
     /// @param left_condition - граничное условие для параметра нефти.
-    void methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar, int j) ;
+    void methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar) ;
 
     /// @brief get_speed - метод расчета скорости по расходу (расход может быть интерполирован)
     double get_speed();
