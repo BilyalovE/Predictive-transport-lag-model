@@ -167,7 +167,7 @@ int main(int argc, char** argv)
     /// @param sum_dt -  сумма времени моделирования 
     double sum_dt = 0;
     /// @param k - счетчик слоев
-    int k = 0;
+    //int k = 0;
     // @param empty_pipe - подставляем на случай, если труба пустая
     double empty_pipe{ 0 };
     double interpolationSulfar{ 0 };
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
         time_dt.output_data();
         buffer.advance(1);
         sum_dt = transport_equation.get_dt();
-        k++;
+        //k++;
     } while (sum_dt <= pipe.T);
    
     return 0;

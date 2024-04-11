@@ -8,7 +8,7 @@ class LineInterpolation
 	double dt;
 
 public:
-	LineInterpolation(const std::vector <double> array_param, const std::vector <double> array_time, const double dt);
+	LineInterpolation(const std::vector <double> array_param, const std::vector <double> array_time, double dt);
 
 	double line_interpolation();
 };

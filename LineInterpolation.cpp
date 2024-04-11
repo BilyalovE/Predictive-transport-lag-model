@@ -1,6 +1,6 @@
 #include "LineInterpolation.h"
 
-LineInterpolation::LineInterpolation(const std::vector <double> array_param, const std::vector <double> array_time, const double dt) {
+LineInterpolation::LineInterpolation(const std::vector <double> array_param, const std::vector <double> array_time, double dt) {
     this->array_param = array_param;
     this->array_time = array_time;
     this->dt = dt;
@@ -17,13 +17,18 @@ double LineInterpolation::line_interpolation()
     /// @param size_array_param - размер синтетического временного ряда параметра
     int size_array_param = array_time.size();
     // Проверка наличия элементов в синтетическом ряде при интерполяции
-   
-    // Выбор прямой, на которой интерполируется расход
-    for (int i = 1; i < size_array_param; i++) {
+    if (dt != 0) {
+        // Выбор прямой, на которой интерполируется расход
+        for (int i = 1; i < size_array_param; i++) {
             if (dt >= array_time[i - 1] && dt <= array_time[i]) {
                 interpolation_param = (dt - array_time[i - 1]) / (array_time[i] - array_time[i - 1]) * (array_param[i] - array_param[i - 1]) + array_param[i - 1];
                 break;
             }
-     }
+        }
+    }
+    else {
+        interpolation_param = array_param[0];
+    }
+
     return interpolation_param;
 }
