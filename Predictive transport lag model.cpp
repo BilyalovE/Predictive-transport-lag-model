@@ -108,31 +108,11 @@ public:
     };
 };
 
-//void push_back(double*& arr, int& size, const double value) {
-//    double* newArray = new double[size + 1];
-//    for (int i = 0; i < size; i++) {
-//        newArray[i] = arr[i];
-//    }
-//    newArray[size] = value;
-//    size++;
-//    delete arr;
-//    arr = newArray;
-//}
+
 
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
-   
-    //int sizeVecSulfar = 0;
-    //int sizeVecFlow = 0;
-   //int sizeVecDisTime = 0;
-    
-    /*double* sulfar = new double[sizeVecSulfar];
-    double* flow = new double[sizeVecFlow];
-    double* discreteTime = new double[sizeVecDisTime];
-    bool flag = true;
-    int j = 2;*/
-
     std::vector <double> sulfar;
     std::vector <double> volumeFlow;
     std::vector <double> discreteTime;
@@ -149,12 +129,6 @@ int main(int argc, char** argv)
         File file("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
         flag = file.fileStatus();
     }
-    /*std::cout << sulfar.size() << std::endl;
-    std::cout << sulfar[0] << std::endl;
-    std::cout << volumeFlow[0] << std::endl;*/
-    std::cout << sulfar.size() << std::endl;
-    std::cout << discreteTime[1110] << std::endl;
-    std::cout << sulfar[1000] << std::endl;
     double initial_sulfar = 200;
     Pipeline_parameters pipe;
     /// @param Начальный слой по сере
@@ -166,8 +140,6 @@ int main(int argc, char** argv)
     ring_buffer_t <std::vector<double>> buffer(2, initial_sulfar_layer);
     /// @param sum_dt -  сумма времени моделирования 
     double sum_dt = 0;
-    /// @param k - счетчик слоев
-    //int k = 0;
     // @param empty_pipe - подставляем на случай, если труба пустая
     double empty_pipe{ 0 };
     double interpolationSulfar{ 0 };
@@ -176,22 +148,11 @@ int main(int argc, char** argv)
     do {
         LineInterpolation sulfarInt(sulfar, discreteTime, sum_dt);
         interpolationSulfar = sulfarInt.line_interpolation();
-
-        //// Проверка выхода за границы массива серы
-        //if (k < sulfar.size()) {
-        //    transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), sulfar[k]);
-        //    
-        //}
-        //else {
-        //    transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), empty_pipe);
-        //    
-        //}
         transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
         OutPutData time_dt("Результат моделирования", buffer.previous(), sum_dt);
         time_dt.output_data();
         buffer.advance(1);
         sum_dt = transport_equation.get_dt();
-        //k++;
     } while (sum_dt <= pipe.T);
    
     return 0;

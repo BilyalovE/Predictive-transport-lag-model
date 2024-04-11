@@ -53,7 +53,6 @@ void File::readValue() {
    
 }
 
-
 std::string File::getValue() {
         readValue();
         return currentValue;

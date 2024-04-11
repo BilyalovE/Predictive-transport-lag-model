@@ -12,8 +12,6 @@ TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std:
 
 void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
 {
-  /*  vector<double> current_layer = buffer.current();
-    vector<double> previous_layer = buffer.previous();*/
     // Получение ссылок на текущий и предыдущий слои буфера
     for (size_t i = 1; i < n; i++)
     {
@@ -39,9 +37,6 @@ double TransportEquation::get_speed() {
     }
     return speed;
 }
-
-
-
 
 /// @brief get_dt - метод получения шага времени dt
 double TransportEquation::get_dt()

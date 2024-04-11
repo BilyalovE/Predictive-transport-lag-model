@@ -28,8 +28,6 @@ class TransportEquation
 public:
     /// @brief Конструктор класса Block_1
     /// @param pipeline_characteristics - Структура исходных параметров трубопровода
-    /// @param n - количество точек расчетной сетки;
-    /// @param j - счетчик текущего слоя
     TransportEquation(const Pipeline_parameters& pipeline_characteristics, const std::vector <double> volumeFlow,
         const std::vector <double> discreteTime);
 
