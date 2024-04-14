@@ -71,7 +71,7 @@ def update_plot(i):
         paramData = rawData[parameter]
         ax.clear()
         ax.grid(True)  # Add grid
-        ax.plot(coordData[i * data_skip: (i + 1) * data_skip], paramData[i * data_skip: (i + 1) * data_skip], color='k')
+        ax.plot(coordData[i * data_skip: (i + 1) * data_skip], paramData[i * data_skip: (i + 1) * data_skip], color='blue', linewidth=2)
         
         # Установите границы для оси x и y
         ax.set_xlim(x_min, x_max)
@@ -98,6 +98,8 @@ def update_plot(i):
 anim = FuncAnimation(fig,
                      update_plot,
                      frames=len(unique_times),
-                     interval=1000, repeat=False)
+                     interval=0.001, repeat=False)
+
+plt.get_current_fig_manager().window.state('zoomed')  # Открываем окно в полноэкранном режиме
 
 plt.show()
