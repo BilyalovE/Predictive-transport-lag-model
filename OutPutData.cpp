@@ -6,6 +6,19 @@ OutPutData::OutPutData(const std::string output_name, const std::vector <double>
     this->sum_dt = sum_dt;
     this->output_name = output_name;
 }
+
+std::string OutPutData::setNormalTimeFormat() {
+    int hours = sum_dt / 3600;
+    int minutes = (sum_dt - hours *3600) / 60;
+    int seconds = sum_dt - hours * 3600 - minutes * 60;
+
+    std::string strHours = std::to_string(hours);
+    std::string strMinutes = std::to_string(minutes);
+    std::string strSeconds = std::to_string(seconds);
+    return strHours + ":" + strMinutes + ":" + strSeconds;
+}
+
+
  /// @brief output_data - метод вывода слоев в файл формата csv
  /// @param i - счётчик слоев;
  /// @param  solver_parameters - структура параметров, необходимых для реализации функции солвера ;
@@ -22,7 +35,7 @@ void OutPutData::output_data()
         outFile << "Время,Координата,Сера" << endl;
         // Записать значения текущего слоя в файл
         for (size_t i = 0; i < previous_layer.size(); i++) {
-            outFile << sum_dt << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
+            outFile << setNormalTimeFormat() << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
 
 
         }
@@ -33,7 +46,7 @@ void OutPutData::output_data()
         ofstream outFile(output_name + ".csv", ios::app);
         // Записать значения текущего слоя в файл
         for (size_t i = 0; i < previous_layer.size(); i++) {
-            outFile << sum_dt << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
+            outFile << setNormalTimeFormat() << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
 
         }
         outFile.close();

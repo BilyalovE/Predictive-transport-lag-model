@@ -11,6 +11,7 @@
 #include "Pipe.h"
 
 
+
 class OutPutData
 {
 	Pipeline_parameters pipe;
@@ -18,10 +19,14 @@ class OutPutData
 	std::vector<double> previous_layer;
 	double sum_dt;
 	std::string output_name;
+	
+	std::string setNormalTimeFormat();
 
 public:
 	OutPutData(const std::string output_name, const std::vector <double>& previous_layer, double sum_dt);
-
+	
+	
+	
 	void output_data();
 };
 
