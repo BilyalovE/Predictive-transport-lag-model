@@ -121,12 +121,11 @@ int main(int argc, char** argv)
     setlocale(LC_ALL, "rus");
 
     while (flag) {
-        appendSulfar(sulfar, "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/sulfar.txt", j);
-        appendVolumeFlow(volumeFlow, "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/mass flow.txt",
-            "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/density.txt", j);
-        appendDiscreteDataTime(discreteTime, "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
+        appendSulfar(sulfar, "sulfar.txt", j);
+        appendVolumeFlow(volumeFlow, "mass flow.txt", "density.txt", j);
+        appendDiscreteDataTime(discreteTime, "discrete analysis data time.txt", j);
         j++;
-        File file("C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/data txt/discrete analysis data time.txt", j);
+        File file("discrete analysis data time.txt", j);
         flag = file.fileStatus();
     }
     double initial_sulfar = 200;
