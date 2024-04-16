@@ -22,7 +22,7 @@ class OutPutData
 	double sulfur;
 	double timeDelayPredict;
 	
-	std::string setNormalTimeFormat();
+	std::string setNormalTimeFormat(const double time);
 
 public:
 	OutPutData(const std::string output_name, const std::vector <double>& previous_layer, double sum_dt);

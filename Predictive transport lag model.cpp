@@ -146,32 +146,35 @@ int main(int argc, char** argv)
     double timeDelayPredict{ 0 };
     double timeDelayReal{ 0 };
     double firstCondSulfar = sulfar[0];
-    double realDifTime{ 0 };
+   // double realDifTime{ 0 };
     /// при таком отклонении следует делать переход устанвоки с режима на режим
     double relativeDeviationSulfur { 10 };
     do {
-        realDifTime = sum_dt;
+        //realDifTime = sum_dt;
         LineInterpolation sulfarInt(sulfar, discreteTime, sum_dt);
         interpolationSulfar = sulfarInt.line_interpolation();
 
-        transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
-        OutPutData time_dt("Результат моделирования", buffer.previous(), sum_dt);
-        time_dt.outputModelingFlowRawMaterials();
+        transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), firstCondSulfar);
+        OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
+        modeling.outputModelingFlowRawMaterials();
         buffer.advance(1);
 
 
         if (timeDelayPredict >= 0) {
             setlocale(LC_ALL, "rus");
-            std::cout <<"Прогнозное время запаздывания = " << timeDelayPredict << " [c]" <<std::endl;
+            OutPutData transportDelay("Прогнозируемое транспортное запаздывание", firstCondSulfar, timeDelayPredict);
+            transportDelay.outputTransportDelay();
             timeDelayPredict = transport_equation.transportDelay();
         }
-        sum_dt = transport_equation.get_dt();
-        realDifTime = sum_dt - realDifTime;
 
-        if (timeDelayPredict >= 0) {
+        sum_dt = transport_equation.get_dt();
+
+
+       // realDifTime = sum_dt - realDifTime;
+        /*if (timeDelayPredict >= 0) {
             setlocale(LC_ALL, "rus");
             std::cout << "Пройденное время = " << realDifTime << " [c]" << std::endl;
-        }
+        }*/
         
         
         timeDelayReal = sum_dt;
