@@ -19,14 +19,18 @@ class OutPutData
 	std::vector<double> previous_layer;
 	double sum_dt;
 	std::string output_name;
+	double sulfur;
+	double timeDelayPredict;
 	
 	std::string setNormalTimeFormat();
 
 public:
 	OutPutData(const std::string output_name, const std::vector <double>& previous_layer, double sum_dt);
 	
+	OutPutData(const std::string output_name, const double sulfur, const double timeDelayPredict);
 	
-	
-	void output_data();
+	void outputTransportDelay();
+
+	void outputModelingFlowRawMaterials();
 };
 

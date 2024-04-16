@@ -7,6 +7,28 @@ OutPutData::OutPutData(const std::string output_name, const std::vector <double>
     this->output_name = output_name;
 }
 
+OutPutData::OutPutData(const std::string output_name, const double sulfur, const double timeDelayPredict)
+{
+    this->sulfur = sulfur;
+    this->output_name = output_name;
+    this->timeDelayPredict = timeDelayPredict;
+}
+
+void OutPutData::outputTransportDelay()
+{
+    // Используем пространство имен std
+    using namespace std;
+    setlocale(LC_ALL, "rus");
+    ofstream outFile(output_name + ".csv");
+    //0 время транспортного запаздывания - начало прогнозирования - точка находится в начале трубы
+    if (timeDelayPredict == 0) {
+        outFile << "Сера,Транспортное запаздывание" << endl;
+    }
+    else {
+
+    }
+}
+
 std::string OutPutData::setNormalTimeFormat() {
     int hours = sum_dt / 3600;
     int minutes = (sum_dt - hours *3600) / 60;
@@ -24,7 +46,7 @@ std::string OutPutData::setNormalTimeFormat() {
  /// @param  solver_parameters - структура параметров, необходимых для реализации функции солвера ;
  /// @param buffer - буфер, рассчитанный после солвера;
  /// @param sum_dt - текущее время моделирования
-void OutPutData::output_data()
+void OutPutData::outputModelingFlowRawMaterials()
 {
     // Используем пространство имен std
     using namespace std;

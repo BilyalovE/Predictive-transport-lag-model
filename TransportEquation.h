@@ -19,7 +19,7 @@ class TransportEquation
     /// @param n - количество точек расчетной сетки;
     int n;
     /// @param dt - шаг во времени из условия Куранта;
-    double dt;
+    double dt{0};
     /// @param speed - скорость движения нефти
     double speed;
     /// @param pipe - параметры трубопровода
@@ -41,5 +41,9 @@ public:
 
     /// @brief get_dt - метод получения шага времени dt
     double get_dt();
+
+
+    /// @brief transportDelay - метод расчета транспортного запаздывания
+    double transportDelay();
 };
 

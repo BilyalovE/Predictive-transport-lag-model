@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Чтение данных из файла CSV
-file_path = "D:/source/Predictive transport lag model/Результат моделирования.csv"
+
+file_path = "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/Результат моделирования.csv"
 data = pd.read_csv(file_path, sep=',')
 
 # Инициализация словарей для хранения массивов данных

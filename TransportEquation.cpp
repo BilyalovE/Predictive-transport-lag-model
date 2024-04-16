@@ -45,3 +45,14 @@ double TransportEquation::get_dt()
     this->dt += pipe.get_dx() / speed;
     return dt;
 }
+
+/// @brief transportDelay - транспортное запаздывание
+/// @return timeDelayPredict - прогнозируемое транспорное запаздывание
+double TransportEquation::transportDelay() {
+    double speed = get_speed();
+    /// @param pathWayOnLastLayers - пройденный путь на пред
+    double pathWayOnLastLayers { 0 };
+    double timeDelayPredict = (pipe.L - pathWayOnLastLayers - speed * dt )/ speed;
+    pathWayOnLastLayers += speed * dt;
+    return timeDelayPredict;
+}
