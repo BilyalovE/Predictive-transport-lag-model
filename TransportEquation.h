@@ -18,6 +18,7 @@ class TransportEquation
     std::vector <double> discreteTime;
     /// @param n - количество точек расчетной сетки;
     int n;
+    double sum_dt;
     /// @param dt - шаг во времени из условия Куранта;
     double dt{0};
     /// @param speed - скорость движения нефти
@@ -29,7 +30,7 @@ public:
     /// @brief Конструктор класса Block_1
     /// @param pipeline_characteristics - Структура исходных параметров трубопровода
     TransportEquation(const Pipeline_parameters& pipeline_characteristics, const std::vector <double> volumeFlow,
-        const std::vector <double> discreteTime);
+        const std::vector <double> discreteTime, double sum_dt);
 
     // @brief methodCharacteristic - метод характеристик, рассчитывающий слои
     /// @param buffer - буфер, который для расчёта хранит 2 слоя (текущий и прядущий);

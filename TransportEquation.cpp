@@ -1,6 +1,6 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double> discreteTime)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double> discreteTime, double sum_dt)
 {
     this->volumeFlow = volumeFlow;
     this->discreteTime = discreteTime;
@@ -8,6 +8,7 @@ TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std:
     this->n = pipe.n;
     /// @param pipeline_characteristics - параметры трубопровода
     this->pipe = pipe;
+    this->sum_dt = sum_dt;
 }
 
 void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
@@ -31,7 +32,7 @@ double TransportEquation::get_speed() {
     }
     else {
 
-        LineInterpolation flow(volumeFlow, discreteTime, dt);
+        LineInterpolation flow(volumeFlow, discreteTime, sum_dt);
         double interpolation_Q = flow.line_interpolation();
         speed = interpolation_Q / square;
     }
@@ -42,7 +43,7 @@ double TransportEquation::get_speed() {
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    this->dt += pipe.get_dx() / speed;
+    this->dt = pipe.get_dx() / speed;
     return dt;
 }
 

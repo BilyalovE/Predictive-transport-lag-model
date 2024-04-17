@@ -142,32 +142,36 @@ int main(int argc, char** argv)
     // @param empty_pipe - подставляем на случай, если труба пустая
     double empty_pipe{ 0 };
     double interpolationSulfar{ 0 };
-    TransportEquation transport_equation(pipe, volumeFlow, discreteTime);
     double timeDelayPredict{ 0 };
     double timeDelayReal{ 0 };
     double firstCondSulfar = sulfar[0];
    // double realDifTime{ 0 };
     /// при таком отклонении следует делать переход устанвоки с режима на режим
     double relativeDeviationSulfur { 10 };
+    double current_sulfar{ 0 };
+    double last_sulfar = initial_sulfar;
     do {
+        TransportEquation transport_equation(pipe, volumeFlow, discreteTime, sum_dt);
         //realDifTime = sum_dt;
         LineInterpolation sulfarInt(sulfar, discreteTime, sum_dt);
         interpolationSulfar = sulfarInt.line_interpolation();
+        current_sulfar = interpolationSulfar;
 
-        transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), firstCondSulfar);
+        transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
         OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
         modeling.outputModelingFlowRawMaterials();
         buffer.advance(1);
 
-
-        if (timeDelayPredict >= 0) {
-            setlocale(LC_ALL, "rus");
-            OutPutData transportDelay("Прогнозируемое транспортное запаздывание", firstCondSulfar, timeDelayPredict);
-            transportDelay.outputTransportDelay();
-            timeDelayPredict = transport_equation.transportDelay();
+        if (abs(current_sulfar - last_sulfar) >= relativeDeviationSulfur) {
+            if (timeDelayPredict >= 0) {
+                setlocale(LC_ALL, "rus");
+                OutPutData transportDelay("Прогнозируемое транспортное запаздывание", interpolationSulfar, timeDelayPredict);
+                transportDelay.outputTransportDelay();
+                timeDelayPredict = transport_equation.transportDelay();
+            }
         }
 
-        sum_dt = transport_equation.get_dt();
+        sum_dt += transport_equation.get_dt();
 
 
        // realDifTime = sum_dt - realDifTime;
@@ -178,7 +182,7 @@ int main(int argc, char** argv)
         
         
         timeDelayReal = sum_dt;
-
+        last_sulfar = interpolationSulfar;
     } while (sum_dt <= pipe.T);
    
     return 0;

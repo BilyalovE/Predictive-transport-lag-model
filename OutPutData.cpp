@@ -37,46 +37,66 @@ void OutPutData::outputModelingFlowRawMaterials()
 {
     // Используем пространство имен std
     using namespace std;
-    setlocale(LC_ALL, "rus");
     ofstream outFile;
-    outFile.open(output_name + ".csv", ofstream::app);
-    //0 слой с записью заголовка
-    if (sum_dt == 0) {
-        outFile << "Время,Координата,Сера" << endl;
-        // Записать значения текущего слоя в файл
-        for (size_t i = 0; i < previous_layer.size(); i++) {
-            outFile << setNormalTimeFormat(sum_dt) << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
+    outFile.exceptions(ofstream::badbit | ofstream::failbit);
+    
+    try
+    {
+        setlocale(LC_ALL, "rus");
+        outFile.open(output_name + ".csv", ofstream::app);
+        //0 слой с записью заголовка
+        if (sum_dt == 0) {
+            outFile << "Время,Координата,Сера" << endl;
+            // Записать значения текущего слоя в файл
+            for (size_t i = 0; i < previous_layer.size(); i++) {
+                outFile << setNormalTimeFormat(sum_dt) << "," << i * pipe.get_dx() << "," << previous_layer[i] << endl;
 
-
+            }
+            outFile.close();
         }
-        outFile.close();
-    }
-    //последующие слои
-    else {
-        // Записать значения текущего слоя в файл
-        for (size_t i = 0; i < previous_layer.size(); i++) {
-            outFile << setNormalTimeFormat(sum_dt) << "," << i * pipe.get_dx() << "," << previous_layer[i]  << endl;
+        //последующие слои
+        else {
+            // Записать значения текущего слоя в файл
+            for (size_t i = 0; i < previous_layer.size(); i++) {
+                outFile << setNormalTimeFormat(sum_dt) << "," << i * pipe.get_dx() << "," << previous_layer[i] << endl;
 
+            }
+            outFile.close();
         }
-        outFile.close();
     }
+    catch (const ofstream::failure& ex)
+    {
+        ex.what();
+    }
+    
 }
 
 void OutPutData::outputTransportDelay()
 {
     // Используем пространство имен std
     using namespace std;
-    setlocale(LC_ALL, "rus");
     ofstream outFile;
-    outFile.open(output_name + ".csv", ofstream::app);
-    //0 время транспортного запаздывания - начало прогнозирования - точка находится в начале трубы
-    if (timeDelayPredict == 0) {
-        outFile << "Сера,Транспортное запаздывание" << endl;
-        outFile.close();
+    outFile.exceptions(ofstream::badbit | ofstream::failbit);
+    try
+    {
+        // Используем пространство имен std
+        using namespace std;
+        setlocale(LC_ALL, "rus");
+        outFile.open(output_name + ".csv", ofstream::app);
+        //0 время транспортного запаздывания - начало прогнозирования - точка находится в начале трубы
+        if (timeDelayPredict == 0) {
+            outFile << "Сера,Транспортное запаздывание" << endl;
+            outFile.close();
+        }
+        else {
+
+            outFile << sulfur << "," << setNormalTimeFormat(timeDelayPredict) << endl;
+            outFile.close();
+        }
     }
-    else {
-        
-        outFile << sulfur << "," << setNormalTimeFormat(timeDelayPredict) << endl;
-        outFile.close();
+    catch (const ofstream::failure & ex)
+    {
+        ex.what();
     }
+    
 }
