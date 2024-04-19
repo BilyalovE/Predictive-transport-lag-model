@@ -1,6 +1,7 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double> discreteTime, double sum_dt)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, 
+    const std::vector <double> discreteTime, const double dt)
 {
     this->volumeFlow = volumeFlow;
     this->discreteTime = discreteTime;
@@ -8,7 +9,7 @@ TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std:
     this->n = pipe.n;
     /// @param pipeline_characteristics - параметры трубопровода
     this->pipe = pipe;
-    this->sum_dt = sum_dt;
+    this->dt = dt;
 }
 
 void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
@@ -32,7 +33,7 @@ double TransportEquation::get_speed() {
     }
     else {
 
-        LineInterpolation flow(volumeFlow, discreteTime, sum_dt);
+        LineInterpolation flow(volumeFlow, discreteTime, dt);
         double interpolation_Q = flow.line_interpolation();
         speed = interpolation_Q / square;
     }
@@ -47,13 +48,3 @@ double TransportEquation::get_dt()
     return dt;
 }
 
-/// @brief transportDelay - транспортное запаздывание
-/// @return timeDelayPredict - прогнозируемое транспорное запаздывание
-double TransportEquation::transportDelay() {
-    double speed = get_speed();
-    /// @param pathWayOnLastLayers - пройденный путь на пред
-    double pathWayOnLastLayers { 0 };
-    double timeDelayPredict = (pipe.L - pathWayOnLastLayers - speed * dt )/ speed;
-    pathWayOnLastLayers += speed * dt;
-    return timeDelayPredict;
-}

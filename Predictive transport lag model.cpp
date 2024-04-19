@@ -6,6 +6,17 @@
 
 */
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <locale.h>
+#include <fstream>
+#include <iomanip>
+#include <fixed/fixed.h>
+#include <pde_solvers/pde_solvers.h>
+#include "Pipe.h"
+#include "LineInterpolation.h"
+
 // Подключаем необходимые библиотеки
 #include <iostream>
 #include <iomanip>
@@ -21,6 +32,7 @@
 #include <thread>
 #include <windows.h>
 #include "OutPutData.h"
+#include "TransportDelay.h"
 
 
 void appendSulfar(std::vector <double> &sulf, std::string path, int lineNumber) {
@@ -145,11 +157,14 @@ int main(int argc, char** argv)
     double timeDelayPredict{ 0 };
     double timeDelayReal{ 0 };
     double firstCondSulfar = sulfar[0];
+    double predictSulfur{ 0 };
    // double realDifTime{ 0 };
     /// при таком отклонении следует делать переход устанвоки с режима на режим
     double relativeDeviationSulfur { 10 };
     double current_sulfar{ 0 };
     double last_sulfar = initial_sulfar;
+    double dt = 0;
+    double speed{ 0 };
     do {
         TransportEquation transport_equation(pipe, volumeFlow, discreteTime, sum_dt);
         //realDifTime = sum_dt;
@@ -163,15 +178,24 @@ int main(int argc, char** argv)
         buffer.advance(1);
 
         if (abs(current_sulfar - last_sulfar) >= relativeDeviationSulfur) {
-            if (timeDelayPredict >= 0) {
-                setlocale(LC_ALL, "rus");
-                OutPutData transportDelay("Прогнозируемое транспортное запаздывание", interpolationSulfar, timeDelayPredict);
-                transportDelay.outputTransportDelay();
-                timeDelayPredict = transport_equation.transportDelay();
-            }
+            dt = 0;
+            predictSulfur = interpolationSulfar;
+            timeDelayPredict = 0;
+        }
+        if (timeDelayPredict >= 0) {
+            setlocale(LC_ALL, "rus");
+            speed = transport_equation.get_speed();
+            TransportDelay time(dt, speed);
+            timeDelayPredict = time.transportDelay();
+            OutPutData transportDelay("Прогнозируемое транспортное запаздывание", predictSulfur, timeDelayPredict);
+            transportDelay.outputTransportDelay();
+       
         }
 
-        sum_dt += transport_equation.get_dt();
+        /// Для определения прогнозируемого запаздывания
+        dt = transport_equation.get_dt();
+        /// Для мониторга конца моделирования
+        sum_dt += dt;
 
 
        // realDifTime = sum_dt - realDifTime;
@@ -182,7 +206,7 @@ int main(int argc, char** argv)
         
         
         timeDelayReal = sum_dt;
-        last_sulfar = interpolationSulfar;
+        last_sulfar = current_sulfar;
     } while (sum_dt <= pipe.T);
    
     return 0;
