@@ -15,9 +15,12 @@ double TransportDelay::transportDelay()
         pathWayOnLastLayers += speed * dt;
     }
 
-
-    double timeDelayPredict = (pipe.L - pathWayOnLastLayers - speed * dt) / speed;
-
+    if (pathWayOnLastLayers <= pipe.L) {
+        timeDelayPredict = (pipe.L - pathWayOnLastLayers - speed * dt) / speed;
+    }
+    else {
+        timeDelayPredict = 0;
+    }
     return timeDelayPredict;
 }
 

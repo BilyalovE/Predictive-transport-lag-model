@@ -71,32 +71,27 @@ void OutPutData::outputModelingFlowRawMaterials()
     
 }
 
-void OutPutData::outputTransportDelay()
-{
-    // Используем пространство имен std
+void OutPutData::outputTransportDelay() {
     using namespace std;
     ofstream outFile;
     outFile.exceptions(ofstream::badbit | ofstream::failbit);
-    try
-    {
-        // Используем пространство имен std
-        using namespace std;
-        setlocale(LC_ALL, "rus");
-        outFile.open(output_name + ".csv", ofstream::app);
-        //0 время транспортного запаздывания - начало прогнозирования - точка находится в начале трубы
-        if (timeDelayPredict == 0) {
-            outFile << "Сера,Транспортное запаздывание" << endl;
-            outFile.close();
-        }
-        else {
+    try {
+        // Проверяем, существует ли файл
+        bool fileExists = ifstream(output_name + ".csv").good();
 
-            outFile << sulfur << "," << setNormalTimeFormat(timeDelayPredict) << endl;
-            outFile.close();
+        outFile.open(output_name + ".csv", ofstream::app);
+
+        // Если файл не существует, записываем заголовки
+        if (!fileExists) {
+            outFile << "Содержание серы,Время транспортного запаздывания" << endl;
         }
+
+        // Записываем данные
+        outFile << sulfur << "," << setNormalTimeFormat(timeDelayPredict) << endl;
+
+        outFile.close();
     }
-    catch (const ofstream::failure & ex)
-    {
+    catch (const ofstream::failure& ex) {
         ex.what();
     }
-    
 }

@@ -16,6 +16,7 @@ class TransportDelay
     double dt;
     double speed;
     double pathWayOnLastLayers;
+    double timeDelayPredict{ 1 };
     Pipeline_parameters pipe;
 
 public:

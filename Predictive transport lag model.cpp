@@ -161,35 +161,42 @@ int main(int argc, char** argv)
    // double realDifTime{ 0 };
     /// при таком отклонении следует делать переход устанвоки с режима на режим
     double relativeDeviationSulfur { 10 };
-    double current_sulfar{ 0 };
-    double last_sulfar = initial_sulfar;
+    double count_current_sulfar{ 0 };
+    double count_last_sulfar = initial_sulfar;
     double dt = 0;
     double speed{ 0 };
+    bool flagStartCountDelay = false;
     do {
         TransportEquation transport_equation(pipe, volumeFlow, discreteTime, sum_dt);
         //realDifTime = sum_dt;
         LineInterpolation sulfarInt(sulfar, discreteTime, sum_dt);
         interpolationSulfar = sulfarInt.line_interpolation();
-        current_sulfar = interpolationSulfar;
-
         transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
         OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
         modeling.outputModelingFlowRawMaterials();
         buffer.advance(1);
 
-        if (abs(current_sulfar - last_sulfar) >= relativeDeviationSulfur) {
+        count_current_sulfar = interpolationSulfar;
+        if (abs(count_current_sulfar - count_last_sulfar) >= relativeDeviationSulfur || count_current_sulfar == sulfar[0]) {
             dt = 0;
-            predictSulfur = interpolationSulfar;
+            predictSulfur = count_current_sulfar;
             timeDelayPredict = 0;
+            flagStartCountDelay = true;
+            count_last_sulfar = predictSulfur;
         }
-        if (timeDelayPredict >= 0) {
+
+        if (flagStartCountDelay) {
             setlocale(LC_ALL, "rus");
             speed = transport_equation.get_speed();
             TransportDelay time(dt, speed);
             timeDelayPredict = time.transportDelay();
-            OutPutData transportDelay("Прогнозируемое транспортное запаздывание", predictSulfur, timeDelayPredict);
-            transportDelay.outputTransportDelay();
-       
+            if (timeDelayPredict >= 0) {
+                OutPutData transportDelay("Прогнозируемое транспортное запаздывание", predictSulfur, timeDelayPredict);
+                transportDelay.outputTransportDelay();
+            }
+            if (timeDelayPredict == 0) {
+                flagStartCountDelay = false;
+            }
         }
 
         /// Для определения прогнозируемого запаздывания
@@ -205,8 +212,8 @@ int main(int argc, char** argv)
         }*/
         
         
-        timeDelayReal = sum_dt;
-        last_sulfar = current_sulfar;
+       
+       
     } while (sum_dt <= pipe.T);
    
     return 0;
