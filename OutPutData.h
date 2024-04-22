@@ -24,6 +24,8 @@ class OutPutData
 	
 	std::string setNormalTimeFormat(const double time);
 
+	
+
 public:
 	OutPutData(const std::string output_name, const std::vector <double>& previous_layer, double sum_dt);
 	
@@ -32,5 +34,7 @@ public:
 	void outputTransportDelay();
 
 	void outputModelingFlowRawMaterials();
+
+	void outputPredictSulfar();
 };
 

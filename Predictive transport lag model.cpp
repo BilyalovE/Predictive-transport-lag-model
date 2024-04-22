@@ -121,10 +121,66 @@ public:
 };
 
 
+class СalcOperationPrediction {
+    
+    Pipeline_parameters pipe;
+
+    /// @param Желаемое время прогнозирования, [c]
+    double desiredTime;
+    /// @param Текущий слой серы
+    std::vector <double> currentSulfarLayer;
+    /// @param Скорость течения сырья на время dt (на время метода характеристик), [м/с]
+    double speed;
+    /// @param Расстояние до выхода из трубы
+    double distanceToExit;
+    /// index - Индекс минимального элемента
+    int index;
+    
+    /// @brief Минимальное абсолютное отклонение от заданного времени 
+    double minAbsErrorTime(std::vector <double>& timeToOut) {
+        double min;
+        std::vector <double> AbsErrorTime = timeToOut;
+        for (int i = 0; i < pipe.n - 1; i++) {
+            AbsErrorTime[i] = abs(timeToOut[i] - desiredTime);
+        }
+        min = AbsErrorTime[0];
+        for (int i = 0; i < pipe.n - 1; i++) {
+            if (min > AbsErrorTime[i]) {
+                min = AbsErrorTime[i];
+                index = i;
+            };
+        }
+        return index;
+    }
+
+public:
+    СalcOperationPrediction(const double desiredTime, const  std::vector <double>& currentSulfarLayer,
+        const double speed) {
+        this->desiredTime = desiredTime;
+        this->currentSulfarLayer = currentSulfarLayer;
+        this->speed = speed;
+    }
+
+    
+
+    double calcOutputSulfarForOperator() {
+
+        std::vector <double> timeToOut(pipe.n, 0);
+        for (int i = 0; i < pipe.n - 1; i++) {
+            distanceToExit = pipe.L - pipe.get_dx() * i;
+            /// Получаю вектор времени до выхода каждой точки из трубы для текущего слоя серы
+            timeToOut[i] = distanceToExit / speed;
+        } 
+        index = minAbsErrorTime(timeToOut);
+        return currentSulfarLayer[index];
+    }
+};
 
 /// @brief Главная функция, в которой происходит инициализация структур, краевых и начальных условий, а также вызов функции солвера и функции вывода в файл
 int main(int argc, char** argv)
 {
+    /// @param Желаемое время прогнозирования, [c]
+    double desiredOperatorTime{15 * 60};
     std::vector <double> sulfar;
     std::vector <double> volumeFlow;
     std::vector <double> discreteTime;
@@ -158,7 +214,6 @@ int main(int argc, char** argv)
     double timeDelayReal{ 0 };
     double firstCondSulfar = sulfar[0];
     double predictSulfur{ 0 };
-   // double realDifTime{ 0 };
     /// при таком отклонении следует делать переход устанвоки с режима на режим
     double relativeDeviationSulfur { 10 };
     double count_current_sulfar{ 0 };
@@ -172,11 +227,20 @@ int main(int argc, char** argv)
         LineInterpolation sulfarInt(sulfar, discreteTime, sum_dt);
         interpolationSulfar = sulfarInt.line_interpolation();
         transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
+        /// Определение серы на выходе через заданное оператором время 
+        speed = transport_equation.get_speed();
+        СalcOperationPrediction sulfar(desiredOperatorTime, buffer.current(), speed);
+        sulfar.calcOutputSulfarForOperator();
+
         OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
         modeling.outputModelingFlowRawMaterials();
+
         buffer.advance(1);
 
+
+
         count_current_sulfar = interpolationSulfar;
+        
         if (abs(count_current_sulfar - count_last_sulfar) >= relativeDeviationSulfur || count_current_sulfar == sulfar[0]) {
             dt = 0;
             predictSulfur = count_current_sulfar;
@@ -201,15 +265,11 @@ int main(int argc, char** argv)
 
         /// Для определения прогнозируемого запаздывания
         dt = transport_equation.get_dt();
+
         /// Для мониторга конца моделирования
         sum_dt += dt;
 
 
-       // realDifTime = sum_dt - realDifTime;
-        /*if (timeDelayPredict >= 0) {
-            setlocale(LC_ALL, "rus");
-            std::cout << "Пройденное время = " << realDifTime << " [c]" << std::endl;
-        }*/
         
         
        

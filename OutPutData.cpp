@@ -14,6 +14,13 @@ OutPutData::OutPutData(const std::string output_name, const double sulfur, const
     this->timeDelayPredict = timeDelayPredict;
 }
 
+OutPutData::OutPutData(const std::string output_name, const double sulfur, const double sum_dt)
+{
+    this->sulfur = sulfur;
+    this->output_name = output_name;
+    this->sum_dt = sum_dt;
+}
+
 
 
 std::string OutPutData::setNormalTimeFormat(const double time) {
@@ -26,6 +33,33 @@ std::string OutPutData::setNormalTimeFormat(const double time) {
     std::string strSeconds = std::to_string(seconds);
     return strHours + ":" + strMinutes + ":" + strSeconds;
 }
+
+void OutPutData::outputPredictSulfar() {
+    using namespace std;
+    ofstream outFile;
+    outFile.exceptions(ofstream::badbit | ofstream::failbit);
+    try {
+        // Проверяем, существует ли файл
+        bool fileExists = ifstream(output_name + ".csv").good();
+
+        outFile.open(output_name + ".csv", ofstream::app);
+
+        // Если файл не существует, записываем заголовки
+        if (!fileExists) {
+            outFile << "Содержание серы,Текущее время моделирования" << endl;
+        }
+
+        // Записываем данные
+        outFile << sulfur << "," << setNormalTimeFormat(sum_dt) << endl;
+
+        outFile.close();
+    }
+    catch (const ofstream::failure& ex) {
+        ex.what();
+    }
+}
+
+
 
 
  /// @brief output_data - метод вывода слоев в файл формата csv

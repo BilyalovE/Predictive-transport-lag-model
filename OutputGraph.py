@@ -75,7 +75,7 @@ y_max = rawData[parametersNames].max().max() + 10  # Максимальное з
 
 # Переменные для хранения предыдущего времени и индекса массива sulfur_array
 prev_time = None
-j = 0
+j = 1
 flag = False
 def update_plot(i):
     global prev_time, j, flag
@@ -110,21 +110,19 @@ def update_plot(i):
        
         if sulfur_array[j] == sulfur_data_0[i]:
             flag = True
-            ax.text(0.2, 1.055, f"Время транспортного запаздывания: {time_delay_array[j]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
-            ax.text(0.1, 1.1, f"Сера: {sulfur_array[j]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
-        if j > 0:
-            if flag:
-                if sulfur_array[j] == sulfur_array[j-1]:
-                    ax.text(0.2, 1.055, f"Время транспортного запаздывания: {time_delay_array[j]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
-                    ax.text(0.1, 1.1, f"Сера: {sulfur_array[j]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
-                    
-                else:
-                    flag = False
+        if flag:
+            if sulfur_array[j] == sulfur_array[j-1]:
+                ax.text(0.2, 1.055, f"Время транспортного запаздывания: {time_delay_array[j]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
+                ax.text(0.1, 1.1, f"Сера: {sulfur_array[j-1]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
+                j += 1  
+            else:
+                flag = False
+                
         if not flag:
             ax.text(0.2, 1.055, f"Время транспортного запаздывания: {0}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
             ax.text(0.1, 1.1, f"Сера: {sulfur_data_0[i]}", transform=ax.transAxes, ha='right', va='top', fontsize=10, bbox=dict(facecolor='white', alpha=0.5))
-            j-=1
-        j += 1  
+            
+        
         
 anim = FuncAnimation(fig,
                      update_plot,
