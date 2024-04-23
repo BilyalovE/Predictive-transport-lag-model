@@ -200,7 +200,8 @@ int main(int argc, char** argv)
     Pipeline_parameters pipe;
     /// @param Начальный слой по сере
     std::vector <double> initial_sulfar_layer(pipe.n, initial_sulfar);
-   
+    /// Для вывода объемного расхода на график
+    std::vector <double> interpolationVolumeFlow(pipe.n, 0);
     // Создаем  буфер для решаемой задачи
     /// @param number_layers_buffer - количество слоев в буфере (для метода характеристик достаточно хранить 2 слоя - предыдущий и текущий слои)
     int number_layers_buffer = 2;
@@ -229,8 +230,14 @@ int main(int argc, char** argv)
         transport_equation.methodCharacteristic(buffer.current(), buffer.previous(), interpolationSulfar);
         /// Определение серы на выходе через заданное оператором время 
         speed = transport_equation.get_speed();
-        СalcOperationPrediction sulfar(desiredOperatorTime, buffer.current(), speed);
-        sulfar.calcOutputSulfarForOperator();
+
+        interpolationVolumeFlow.push_back(speed * pipe.get_inner_square());
+
+        СalcOperationPrediction sulfarPrediction(desiredOperatorTime, buffer.current(), speed);
+        predictSulfur = sulfarPrediction.calcOutputSulfarForOperator();
+
+        OutPutData predictSulfarForOperator("Прогнозирование качества сырья на выходе при заданном времени прогноза", predictSulfur, sum_dt);
+        predictSulfarForOperator.outputPredictSulfar();
 
         OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
         modeling.outputModelingFlowRawMaterials();
@@ -268,13 +275,9 @@ int main(int argc, char** argv)
 
         /// Для мониторга конца моделирования
         sum_dt += dt;
-
-
-        
-        
-       
-       
     } while (sum_dt <= pipe.T);
-   
+    OutPutData outputVolumeFlow("Интерполированный объемный расход", interpolationVolumeFlow);
+    outputVolumeFlow.outputInerpolationVolumeFlow();
+
     return 0;
 }

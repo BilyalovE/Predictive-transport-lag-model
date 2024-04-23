@@ -20,7 +20,8 @@ class OutPutData
 	double sum_dt;
 	std::string output_name;
 	double sulfur;
-	double timeDelayPredict;
+	double time;
+	std::vector<double> interpolationVolumeFlow;
 	
 	std::string setNormalTimeFormat(const double time);
 
@@ -29,12 +30,16 @@ class OutPutData
 public:
 	OutPutData(const std::string output_name, const std::vector <double>& previous_layer, double sum_dt);
 	
-	OutPutData(const std::string output_name, const double sulfur, const double timeDelayPredict);
-	
+	OutPutData(const std::string output_name, const double sulfur, const double time);
+
+	OutPutData(const std::string output_name, const std::vector<double>& interpolationVolumeFlow);
+
 	void outputTransportDelay();
 
 	void outputModelingFlowRawMaterials();
 
 	void outputPredictSulfar();
+
+	void outputInerpolationVolumeFlow();
 };
 

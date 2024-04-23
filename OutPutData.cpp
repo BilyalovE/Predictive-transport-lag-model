@@ -7,19 +7,18 @@ OutPutData::OutPutData(const std::string output_name, const std::vector <double>
     this->output_name = output_name;
 }
 
-OutPutData::OutPutData(const std::string output_name, const double sulfur, const double timeDelayPredict)
+OutPutData::OutPutData(const std::string output_name, const double sulfur, const double time)
 {
     this->sulfur = sulfur;
     this->output_name = output_name;
-    this->timeDelayPredict = timeDelayPredict;
+    this->time = time;
 }
 
-OutPutData::OutPutData(const std::string output_name, const double sulfur, const double sum_dt)
-{
-    this->sulfur = sulfur;
+OutPutData::OutPutData(const std::string output_name, const std::vector <double>& interpolationVolumeFlow) {
     this->output_name = output_name;
-    this->sum_dt = sum_dt;
+    this->interpolationVolumeFlow = interpolationVolumeFlow;
 }
+
 
 
 
@@ -50,7 +49,34 @@ void OutPutData::outputPredictSulfar() {
         }
 
         // Записываем данные
-        outFile << sulfur << "," << setNormalTimeFormat(sum_dt) << endl;
+        outFile << sulfur << "," << setNormalTimeFormat(time) << endl;
+
+        outFile.close();
+    }
+    catch (const ofstream::failure& ex) {
+        ex.what();
+    }
+}
+
+void OutPutData::outputInerpolationVolumeFlow() {
+    using namespace std;
+    ofstream outFile;
+    outFile.exceptions(ofstream::badbit | ofstream::failbit);
+    try {
+        // Проверяем, существует ли файл
+        bool fileExists = ifstream(output_name + ".csv").good();
+
+        outFile.open(output_name + ".csv", ofstream::app);
+
+        // Если файл не существует, записываем заголовки
+        if (!fileExists) {
+            outFile << "Интерполированный объемный расход" << endl;
+        }
+
+        // Записываем данные
+        for (size_t i = 0; i < interpolationVolumeFlow.size(); i++) {
+            outFile << interpolationVolumeFlow[i] << endl;
+        }
 
         outFile.close();
     }
@@ -121,7 +147,7 @@ void OutPutData::outputTransportDelay() {
         }
 
         // Записываем данные
-        outFile << sulfur << "," << setNormalTimeFormat(timeDelayPredict) << endl;
+        outFile << sulfur << "," << setNormalTimeFormat(time) << endl;
 
         outFile.close();
     }
