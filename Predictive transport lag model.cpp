@@ -231,7 +231,7 @@ int main(int argc, char** argv)
         /// Определение серы на выходе через заданное оператором время 
         speed = transport_equation.get_speed();
 
-        interpolationVolumeFlow.push_back(speed * pipe.get_inner_square());
+        interpolationVolumeFlow.push_back(speed * pipe.get_inner_square() * 3600);
 
         СalcOperationPrediction sulfarPrediction(desiredOperatorTime, buffer.current(), speed);
         predictSulfur = sulfarPrediction.calcOutputSulfarForOperator();

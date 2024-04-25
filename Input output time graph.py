@@ -1,10 +1,33 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import csv
+
+# Создаем пустой массив для хранения данных
+volumeFlow = []
+
+# Путь к CSV файлу
+file_pathVolumeFlow = 'C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/Интерполированный объемный расход.csv'
+
+# Читаем CSV файл
+with open(file_pathVolumeFlow, newline='') as csvfile:
+    reader = csv.reader(csvfile)
+    # Пропускаем заголовок
+    next(reader, None)
+    # Читаем каждую строку CSV файла
+    for row in reader:
+        # Преобразуем строковое значение в числовой тип данных
+        value = float(row[0])  # Предполагается, что данные находятся в первом столбце
+        # Добавляем значение в массив
+        volumeFlow.append(value)
+
+
+
 
 # Чтение данных из файла CSV
 
 file_path = "C:/Users/bilyalov/source/repos/Predictive-transport-lag-model/Результат моделирования.csv"
 data = pd.read_csv(file_path, sep=',')
+
 
 # Инициализация словарей для хранения массивов данных
 column_arrays_0 = {}
@@ -93,17 +116,19 @@ for spine in plt.gca().spines.values():
 plt.annotate('', xy=(0, 0), xytext=(0, 1), arrowprops=dict(facecolor='black', arrowstyle='<|-', linewidth=2))
 plt.annotate('', xy=(0, 0), xytext=(1, 0), arrowprops=dict(facecolor='black', arrowstyle='<|-', linewidth=2))
 
+print("Размерность массива time_data_0:", len(time_data_0))
+print("Размерность массива volumeFlow:", len(volumeFlow))
 
 #График для расхода
-plt.subplot(3, 1, 3)
-plt.plot(time_data_1500, density_data_1500, linestyle='-')
-plt.title('Изменение серы на выходе из трубы', fontsize=12)
+plt.subplot(1, 1, 1)
+plt.plot(time_data_0, volumeFlow, linestyle='-')
+plt.title('Объемный расход', fontsize=12)
 plt.xlabel('Время', fontsize=12)
-plt.ylabel('Содержание серы', fontsize=12)
+plt.ylabel('Объемный расход', fontsize=12)
 plt.grid(True)
-plt.xlim(0, max(time_data_1500))  # Устанавливаем максимальное значение по оси времени
+plt.xlim(0, max(time_data_0))  # Устанавливаем максимальное значение по оси времени
 plt.xticks(rotation=45)  # Поворот подписей по оси x
-plt.gca().set_xticks(time_data_1500)  # Установка меток оси x в соответствии с данными
+plt.gca().set_xticks(time_data_0)  # Установка меток оси x в соответствии с данными
 
 # Применение пользовательского числа разбиений для сетки на нижнем графике
 plt.gca().locator_params(axis='y', nbins=30)
