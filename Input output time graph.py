@@ -54,24 +54,24 @@ density_data_1500 = column_arrays_1500['Сера'][:]
 
 
 # Создание графиков
-plt.figure(figsize=(17, 10))
+plt.figure(figsize=(16.5, 10))
 
 # График для координаты 0
 plt.subplot(3, 1, 1)
 plt.plot(time_data_0, sulfur_data_0, linestyle='-')
 plt.title('Изменение серы на входе в трубу', fontsize=12)
-plt.xlabel('Время', fontsize=12)
-plt.ylabel('Содержание серы', fontsize=12)
+plt.xlabel('Время', fontsize=10)
+plt.ylabel('Содержание серы', fontsize=10)
 plt.grid(True)
 plt.xlim(0, max(time_data_0))  # Устанавливаем максимальное значение по оси времени
 plt.xticks(rotation=45)  # Поворот подписей по оси x
 plt.gca().set_xticks(time_data_0)  # Установка меток оси x в соответствии с данными
 
 # Применение пользовательского числа разбиений для сетки на верхнем графике
-plt.gca().locator_params(axis='y', nbins=30)
+plt.gca().locator_params(axis='y', nbins=20)
 # Применение пользовательского числа разбиений для сетки на нижнем графике
 plt.gca().locator_params(axis='x', nbins=50)
-plt.tick_params(axis='both', which='major', labelsize=8)  # Уменьшение размера цифр осей данных
+plt.tick_params(axis='both', which='major', labelsize=7) # Уменьшение размера цифр осей данных
 
 # Выделение осей цветом и толщиной
 for spine in plt.gca().spines.values():
@@ -90,18 +90,18 @@ plt.annotate('', xy=(0, 0), xytext=(1, 0), arrowprops=dict(facecolor='black', ar
 plt.subplot(3, 1, 2)
 plt.plot(time_data_1500, density_data_1500, linestyle='-')
 plt.title('Изменение серы на выходе из трубы', fontsize=12)
-plt.xlabel('Время', fontsize=12)
-plt.ylabel('Содержание серы', fontsize=12)
+plt.xlabel('Время', fontsize=10)
+plt.ylabel('Содержание серы', fontsize=10)
 plt.grid(True)
 plt.xlim(0, max(time_data_1500))  # Устанавливаем максимальное значение по оси времени
 plt.xticks(rotation=45)  # Поворот подписей по оси x
 plt.gca().set_xticks(time_data_1500)  # Установка меток оси x в соответствии с данными
 
 # Применение пользовательского числа разбиений для сетки на нижнем графике
-plt.gca().locator_params(axis='y', nbins=30)
+plt.gca().locator_params(axis='y', nbins=20)
 # Применение пользовательского числа разбиений для сетки на нижнем графике
 plt.gca().locator_params(axis='x', nbins=50)
-plt.tick_params(axis='both', which='major', labelsize=8)  # Уменьшение размера цифр осей данных
+plt.tick_params(axis='both', which='major', labelsize=7)  # Уменьшение размера цифр осей данных
 
 # Выделение осей цветом и толщиной
 for spine in plt.gca().spines.values():
@@ -116,25 +116,25 @@ for spine in plt.gca().spines.values():
 plt.annotate('', xy=(0, 0), xytext=(0, 1), arrowprops=dict(facecolor='black', arrowstyle='<|-', linewidth=2))
 plt.annotate('', xy=(0, 0), xytext=(1, 0), arrowprops=dict(facecolor='black', arrowstyle='<|-', linewidth=2))
 
-print("Размерность массива time_data_0:", len(time_data_0))
-print("Размерность массива volumeFlow:", len(volumeFlow))
+
 
 #График для расхода
-plt.subplot(1, 1, 1)
+plt.subplot(3, 1, 3)
 plt.plot(time_data_0, volumeFlow, linestyle='-')
-plt.title('Объемный расход', fontsize=12)
-plt.xlabel('Время', fontsize=12)
-plt.ylabel('Объемный расход', fontsize=12)
+plt.title('График изменения объемного расхода', fontsize=12)
+plt.xlabel('Время', fontsize=10)
+plt.ylabel('Объемный расход', fontsize=10)
 plt.grid(True)
+plt.ylim(100, max(volumeFlow))  # Устанавливаем максимальное значение по оси времени
 plt.xlim(0, max(time_data_0))  # Устанавливаем максимальное значение по оси времени
 plt.xticks(rotation=45)  # Поворот подписей по оси x
 plt.gca().set_xticks(time_data_0)  # Установка меток оси x в соответствии с данными
 
 # Применение пользовательского числа разбиений для сетки на нижнем графике
-plt.gca().locator_params(axis='y', nbins=30)
+plt.gca().locator_params(axis='y', nbins=20)
 # Применение пользовательского числа разбиений для сетки на нижнем графике
 plt.gca().locator_params(axis='x', nbins=50)
-plt.tick_params(axis='both', which='major', labelsize=8)  # Уменьшение размера цифр осей данных
+plt.tick_params(axis='both', which='major', labelsize=7)  # Уменьшение размера цифр осей данных
 
 #
 
@@ -147,9 +147,7 @@ for spine in plt.gca().spines.values():
     else:
         spine.set_visible(False)  # Скрытие остальных линий границ
 
-# Добавление стрелок на концах осей
-plt.annotate('', xy=(0, 0), xytext=(0, 1), arrowprops=dict(facecolor='black', arrowstyle='<|-', linewidth=2))
-plt.annotate('', xy=(0, 0), xytext=(1, 0), arrowprops=dict(facecolor='black', arrowstyle='<|-', linewidth=2))
+
 
 # Отображение графиков
 plt.tight_layout()
