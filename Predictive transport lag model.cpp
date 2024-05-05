@@ -238,6 +238,9 @@ int main(int argc, char** argv)
 
         OutPutData predictSulfarForOperator("Прогнозирование качества сырья на выходе при заданном времени прогноза", predictSulfur, sum_dt);
         predictSulfarForOperator.outputPredictSulfar();
+        double timeForPredictSulfar{ sum_dt + desiredOperatorTime };
+        OutPutData absErrorPredictSulfar("Для расчета ошибки прогнозирования", predictSulfur, timeForPredictSulfar);
+        absErrorPredictSulfar.outputPredictSulfar();
 
         OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
         modeling.outputModelingFlowRawMaterials();
