@@ -50,7 +50,8 @@ for i in range(83, len(time_data)):
     time_data1.append(time_data[i])
 
 
-plt.plot(time_data1, absError, linestyle='-')
+
+""" plt.plot(time_data1, absError, linestyle='-')
 plt.title('Спрогнозированное содержание серы на выходе', fontsize=12)
 plt.xlabel('Время', fontsize=10)
 plt.ylabel('Содержание серы', fontsize=10)
@@ -75,11 +76,13 @@ for spine in plt.gca().spines.values():
         spine.set_visible(False)  # Скрытие остальных линий границ
 
 
+print(time_data[1003])
+print(time_data_1500[1086])
 
 
 # Отображение графика
 plt.tight_layout()
 plt.show()
-
+ """
 
 

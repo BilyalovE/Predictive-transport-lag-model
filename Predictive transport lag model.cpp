@@ -222,6 +222,21 @@ int main(int argc, char** argv)
     double dt = 0;
     double speed{ 0 };
     bool flagStartCountDelay = false;
+
+    /// Для расчета ошибки синхронизированной во времени с реальными значениями выхода серы
+    /// @param - Время прогнозирования серы
+    double timeForPredictSulfar;
+    /// @param errorTimeLine - вектор временного ряда ошибки
+    std::vector <double> errorTimeLine;
+    /// @param arrPredictSulfar - вектор прогнозной серы
+    std::vector <double> arrPredictSulfar;
+    /// @param arrRealOutSulfar - вектор реальной серы на выходе трубы 
+    std::vector <double> arrRealOutSulfar;
+    /// @param timeLine - вектор времени характеристик - дискретного времени моделирования
+    std::vector <double> timeLine;
+    /// @param arrErrorSulfar - вектор ошибки прогнозной серы
+    std::vector <double> arrErrorSulfar;
+
     do {
         TransportEquation transport_equation(pipe, volumeFlow, discreteTime, sum_dt);
         //realDifTime = sum_dt;
@@ -232,25 +247,29 @@ int main(int argc, char** argv)
         speed = transport_equation.get_speed();
 
         interpolationVolumeFlow.push_back(speed * pipe.get_inner_square() * 3600);
-
         СalcOperationPrediction sulfarPrediction(desiredOperatorTime, buffer.current(), speed);
         predictSulfur = sulfarPrediction.calcOutputSulfarForOperator();
+        /// Для прогнозирования ошибки
+        arrPredictSulfar.push_back(predictSulfur);
 
         OutPutData predictSulfarForOperator("Прогнозирование качества сырья на выходе при заданном времени прогноза", predictSulfur, sum_dt);
         predictSulfarForOperator.outputPredictSulfar();
-        double timeForPredictSulfar{ sum_dt + desiredOperatorTime };
-        OutPutData absErrorPredictSulfar("Для расчета ошибки прогнозирования", predictSulfur, timeForPredictSulfar);
-        absErrorPredictSulfar.outputPredictSulfar();
+
+        ///по факту мы прогнозируем серу на время через 15 минут, то есть нужно ее сравнивать с выходом, через 15 минут
+        timeForPredictSulfar = sum_dt + desiredOperatorTime;
+        errorTimeLine.push_back(timeForPredictSulfar);
+
+        //OutPutData absErrorPredictSulfar("Для расчета ошибки прогнозирования", predictSulfur, timeForPredictSulfar);
+        //absErrorPredictSulfar.outputPredictSulfar();
 
         OutPutData modeling("Результат моделирования", buffer.previous(), sum_dt);
         modeling.outputModelingFlowRawMaterials();
+        /// Для синхронизации ошибки прогнозной и реальной серы
+        arrRealOutSulfar.push_back(buffer.previous()[pipe.n-1]);
+        timeLine.push_back(sum_dt);
 
-        buffer.advance(1);
-
-
-
+        // Для первой реализации задачи - расчет транспортного запаздывания
         count_current_sulfar = interpolationSulfar;
-        
         if (abs(count_current_sulfar - count_last_sulfar) >= relativeDeviationSulfur || count_current_sulfar == sulfar[0]) {
             dt = 0;
             predictSulfur = count_current_sulfar;
@@ -258,7 +277,6 @@ int main(int argc, char** argv)
             flagStartCountDelay = true;
             count_last_sulfar = predictSulfur;
         }
-
         if (flagStartCountDelay) {
             setlocale(LC_ALL, "rus");
             speed = transport_equation.get_speed();
@@ -272,15 +290,27 @@ int main(int argc, char** argv)
                 flagStartCountDelay = false;
             }
         }
+        // Для первой реализации задачи - расчет транспортного запаздывания
+
 
         /// Для определения прогнозируемого запаздывания
         dt = transport_equation.get_dt();
-
         /// Для мониторга конца моделирования
         sum_dt += dt;
+        buffer.advance(1);
     } while (sum_dt <= pipe.T);
+
+    /// Выводим расход в файл
     OutPutData outputVolumeFlow("Интерполированный объемный расход", interpolationVolumeFlow);
     outputVolumeFlow.outputInerpolationVolumeFlow();
+
+    /// Работаем с расчетом ошибки при синхронизациии временных рядов прогнозной серы на выходе трубы и реальной
+    for (int i = 0; i < errorTimeLine.size(); i++) {
+        LineInterpolation realOutSulfar(arrRealOutSulfar, timeLine, errorTimeLine[i]);
+        arrErrorSulfar[i] = arrPredictSulfar[i] - realOutSulfar.line_interpolation();
+    }
+    OutPutData outputErrorPredictSulfur("Ошибка прогнозирования", arrErrorSulfar, errorTimeLine);
+    outputErrorPredictSulfur.outputErrorPredictSulfar();
 
     return 0;
 }

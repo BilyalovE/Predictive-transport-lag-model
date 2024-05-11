@@ -19,6 +19,11 @@ OutPutData::OutPutData(const std::string output_name, const std::vector <double>
     this->interpolationVolumeFlow = interpolationVolumeFlow;
 }
 
+OutPutData::OutPutData(const std::string output_name, const std::vector <double>& param, const std::vector <double>& timeLine) {
+    this->output_name = output_name;
+    this->param = param;
+    this->timeLine = timeLine;
+}
 
 
 
@@ -129,6 +134,35 @@ void OutPutData::outputModelingFlowRawMaterials()
         ex.what();
     }
     
+}
+
+
+void OutPutData::outputErrorPredictSulfar() {
+    using namespace std;
+    ofstream outFile;
+    outFile.exceptions(ofstream::badbit | ofstream::failbit);
+    try {
+        // Проверяем, существует ли файл
+        bool fileExists = ifstream(output_name + ".csv").good();
+
+        outFile.open(output_name + ".csv", ofstream::app);
+
+        // Если файл не существует, записываем заголовки
+        if (!fileExists) {
+            outFile << "Ошибка прогнозирования,Время" << endl;
+        }
+
+        // Записываем данные
+            for (size_t i = 0; i < param.size(); i++) {
+                // Записываем данные
+                outFile << param[i] << "," << setNormalTimeFormat(timeLine[i]) << endl;
+            }
+
+        outFile.close();
+    }
+    catch (const ofstream::failure& ex) {
+        ex.what();
+    }
 }
 
 void OutPutData::outputTransportDelay() {
