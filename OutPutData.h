@@ -37,7 +37,7 @@ public:
 
 	OutPutData(const std::string output_name, const std::vector <double>& param, const std::vector <double>& timeLine);
 
-	void outputErrorPredictSulfar();
+	void outputParamWithTime();
 
 	void outputTransportDelay();
 

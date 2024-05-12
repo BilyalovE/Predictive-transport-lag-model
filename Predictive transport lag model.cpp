@@ -196,7 +196,7 @@ int main(int argc, char** argv)
         File file("discrete analysis data time.txt", j);
         flag = file.fileStatus();
     }
-    double initial_sulfur = 200;
+    double initial_sulfur = 220;
     Pipeline_parameters pipe;
     /// @param Начальный слой по сере
     std::vector <double> initial_sulfur_layer(pipe.n, initial_sulfur);
@@ -226,8 +226,8 @@ int main(int argc, char** argv)
     /// Для расчета ошибки синхронизированной во времени с реальными значениями выхода серы
     /// @param - Время прогнозирования серы
     double timeForPredictSulfur;
-    /// @param errorTimeLine - вектор временного ряда ошибки
-    std::vector <double> errorTimeLine;
+    /// @param predictTimeLine - вектор временного ряда прогнозной серы
+    std::vector <double> predictTimeLine;
     /// @param arrPredictSulfar - вектор прогнозной серы
     std::vector <double> arrPredictSulfur;
     /// @param arrRealOutSulfar - вектор реальной серы на выходе трубы 
@@ -257,7 +257,7 @@ int main(int argc, char** argv)
 
         ///по факту мы прогнозируем серу на время через 15 минут, то есть нужно ее сравнивать с выходом, через 15 минут
         timeForPredictSulfur = sum_dt + desiredOperatorTime;
-        errorTimeLine.push_back(timeForPredictSulfur);
+        predictTimeLine.push_back(timeForPredictSulfur);
 
         //OutPutData absErrorPredictSulfar("Для расчета ошибки прогнозирования", predictSulfur, timeForPredictSulfar);
         //absErrorPredictSulfar.outputPredictSulfar();
@@ -303,14 +303,23 @@ int main(int argc, char** argv)
     /// Выводим расход в файл
     OutPutData outputVolumeFlow("Интерполированный объемный расход", interpolationVolumeFlow);
     outputVolumeFlow.outputInerpolationVolumeFlow();
-
+    
+    std::vector<double> arrPredictSulfurSinc;
     /// Работаем с расчетом ошибки при синхронизациии временных рядов прогнозной серы на выходе трубы и реальной
-    for (int i = 0; i < errorTimeLine.size(); i++) {
-        LineInterpolation predictSulfur(arrPredictSulfur, errorTimeLine, timeLine[i]);
-        arrErrorSulfur[i] = arrRealOutSulfur[i] - predictSulfur.line_interpolation();
+    for (int i = 0; i < timeLine.size(); i++) {
+        LineInterpolation predictSulfur(arrPredictSulfur, predictTimeLine, timeLine[i]);
+        arrErrorSulfur.push_back(abs(arrRealOutSulfur[i] - predictSulfur.line_interpolation()) / arrRealOutSulfur[i] * 100);
+        arrPredictSulfurSinc.push_back(predictSulfur.line_interpolation());
     }
-    OutPutData outputErrorPredictSulfur("Ошибка прогнозирования", arrErrorSulfur, errorTimeLine);
-    outputErrorPredictSulfur.outputErrorPredictSulfar();
+    /// Выводим прогнозируемое содержание серы на выходе трубы, синхронизируемое с реальными показаниями
+    OutPutData outputPredictSulfurSinc("Синхронизированный по выходу прогноз серы", arrPredictSulfurSinc, timeLine);
+    outputPredictSulfurSinc.outputParamWithTime();
+
+    /// Выводим ошибку прогнозирования
+    OutPutData outputErrorPredictSulfur("Ошибка прогнозирования", arrErrorSulfur, timeLine);
+    outputErrorPredictSulfur.outputParamWithTime();
+    
+    
 
     return 0;
 }

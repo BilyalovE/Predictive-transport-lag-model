@@ -137,7 +137,7 @@ void OutPutData::outputModelingFlowRawMaterials()
 }
 
 
-void OutPutData::outputErrorPredictSulfar() {
+void OutPutData::outputParamWithTime() {
     using namespace std;
     ofstream outFile;
     outFile.exceptions(ofstream::badbit | ofstream::failbit);
