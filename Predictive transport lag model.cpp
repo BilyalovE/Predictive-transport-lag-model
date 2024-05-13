@@ -318,8 +318,6 @@ int main(int argc, char** argv)
     /// Выводим ошибку прогнозирования
     OutPutData outputErrorPredictSulfur("Ошибка прогнозирования", arrErrorSulfur, timeLine);
     outputErrorPredictSulfur.outputParamWithTime();
-    
-    
 
     return 0;
 }
