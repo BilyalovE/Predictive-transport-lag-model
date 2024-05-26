@@ -133,6 +133,7 @@
     <ClCompile Include="LineInterpolation.cpp" />
     <ClCompile Include="OutPutData.cpp" />
     <ClCompile Include="Predictive transport lag model.cpp" />
+    <ClCompile Include="TransportDelay.cpp" />
     <ClCompile Include="TransportEquation.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="OutPutData.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Pipe.h" />
+    <ClInclude Include="TransportDelay.h" />
     <ClInclude Include="TransportEquation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

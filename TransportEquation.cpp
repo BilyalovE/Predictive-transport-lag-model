@@ -1,6 +1,7 @@
 ﻿#include "TransportEquation.h"
 
-TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, const std::vector <double> discreteTime)
+TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std::vector <double> volumeFlow, 
+    const std::vector <double> discreteTime, const double dt)
 {
     this->volumeFlow = volumeFlow;
     this->discreteTime = discreteTime;
@@ -8,6 +9,7 @@ TransportEquation::TransportEquation(const Pipeline_parameters& pipe, const std:
     this->n = pipe.n;
     /// @param pipeline_characteristics - параметры трубопровода
     this->pipe = pipe;
+    this->dt = dt;
 }
 
 void TransportEquation::methodCharacteristic(vector<double>& current_layer, vector<double>& previous_layer, double left_condition_sulfar)
@@ -42,6 +44,7 @@ double TransportEquation::get_speed() {
 double TransportEquation::get_dt()
 {
     double speed = get_speed();
-    this->dt += pipe.get_dx() / speed;
+    this->dt = pipe.get_dx() / speed;
     return dt;
 }
+

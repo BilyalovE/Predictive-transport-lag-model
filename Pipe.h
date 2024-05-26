@@ -6,7 +6,7 @@
 struct Pipeline_parameters
 {
     /// @param L - длина трубопровода, м;
-    double L = 1500;
+    double L = 2500;
     /// @param D - внешний диаметр трубы, м;
     double D = 0.219;
     /// @param d - толщина стенки трубы, м;
